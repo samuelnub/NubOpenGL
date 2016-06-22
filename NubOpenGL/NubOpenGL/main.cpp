@@ -2,11 +2,14 @@
 //
 
 #include <iostream>
-
+#include "graphics.h"
 
 int main()
 {
 	std::cout << "hi\n";
+
+	Graphics giraffe;
+
     return 0;
 }
 

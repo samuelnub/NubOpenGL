@@ -1,0 +1,5 @@
+22 June 2016
+	opens window successfully, reads window dimensions from global vars for now, like the filthy hog that i am
+
+TODO:
+	render something in ogl

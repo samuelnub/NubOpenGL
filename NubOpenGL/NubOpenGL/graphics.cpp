@@ -6,12 +6,7 @@
 
 Graphics::Graphics()
 {
-#ifndef __APPLE__
-	GLenum status = glewInit();
-	if (status != GLEW_OK) {
-		std::cerr << "GLEW failed to initialize!" << std::endl;
-	}
-#endif
+
 
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, glsettings::majorVer);
@@ -29,6 +24,15 @@ Graphics::Graphics()
 	}
 
 	glfwMakeContextCurrent(this->_windu);
+
+#ifndef __APPLE__
+	glewExperimental = GL_TRUE;
+	GLenum status = glewInit();
+	if (status != GLEW_OK) {
+		std::cerr << "GLEW couldnt init :((((\n" << std::endl;
+		exit(GENERIC_ERROR);
+	}
+#endif
 
 	int width, height;
 	glfwGetFramebufferSize(this->_windu, &width, &height);

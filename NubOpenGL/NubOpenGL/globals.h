@@ -15,6 +15,7 @@ namespace glsettings
 	const int minorVer = 3;
 }
 
+//TODO: probably gonna read this from a file eventually lol
 namespace windowsettings
 {
 	const int width = 1024;

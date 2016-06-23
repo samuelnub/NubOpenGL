@@ -18,9 +18,6 @@
 class Render
 {
 private:
-
-	std::vector<Vertex> _vertices;
-
 	GLuint _VBOid;
 	GLuint _VAOid;
 	GLuint _EBOid;
@@ -31,10 +28,10 @@ private:
 
 public:
 	//when an instance of this is made, take a reference of the external vertex data and put it in this->_vertices array
-	Render(const std::vector<Vertex> &vertData);
+	Render();
 	~Render();
 
-	void bind();
+	void bind(const std::vector<Vertex> &vertData);
 
 	void shade(const char *vSource, const char *fSource);
 

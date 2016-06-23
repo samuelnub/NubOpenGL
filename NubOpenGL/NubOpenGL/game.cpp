@@ -18,9 +18,9 @@
 Game::Game(GLFWwindow *windu)
 {
 
-	Render triangolo(verts::triangle1);
+	Render triangolo;
 
-	triangolo.bind();
+	triangolo.bind(verts::triangle1);
 	triangolo.shade(shaders::vertex, shaders::fragment);
 
 	while (!glfwWindowShouldClose(windu))

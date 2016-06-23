@@ -1,9 +1,8 @@
 #include "render.h"
 #include <iostream>
 
-Render::Render(const std::vector<Vertex>& vertData)
+Render::Render()
 {
-	this->_vertices = vertData;
 }
 
 Render::~Render()
@@ -13,7 +12,7 @@ Render::~Render()
 }
 
 
-void Render::bind()
+void Render::bind(const std::vector<Vertex> &vertData)
 {
 	glGenVertexArrays(1, &this->_VAOid);
 	glBindVertexArray(this->_VAOid);
@@ -22,8 +21,8 @@ void Render::bind()
 	glBindBuffer(GL_ARRAY_BUFFER, this->_VBOid);
 	glBufferData(
 		GL_ARRAY_BUFFER,
-		_vertices.size() * sizeof(Vertex),
-		&_vertices[0],
+		vertData.size() * sizeof(Vertex),
+		&vertData[0],
 		GL_STATIC_DRAW
 		);
 

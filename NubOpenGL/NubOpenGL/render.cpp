@@ -110,7 +110,7 @@ void Render::draw()
 	}
 	else
 	{
-		glDrawArrays(GL_TRIANGLES, this->_VBOsize, 3);
+		glDrawArrays(GL_TRIANGLES, 0, this->_VBOsize);
 	}
 	glBindVertexArray(0);
 }

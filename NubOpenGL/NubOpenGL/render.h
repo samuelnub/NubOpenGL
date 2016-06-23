@@ -27,7 +27,6 @@ private:
 	GLuint _shaderProgram;
 
 public:
-	//when an instance of this is made, take a reference of the external vertex data and put it in this->_vertices array
 	Render();
 	~Render();
 

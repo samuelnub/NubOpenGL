@@ -18,10 +18,10 @@
 Game::Game(GLFWwindow *windu)
 {
 
-	Render triango(verts::triangle1);
+	Render triangolo(verts::triangle1);
 
-	triango.bind();
-	triango.shade(shaders::vertex, shaders::fragment);
+	triangolo.bind();
+	triangolo.shade(shaders::vertex, shaders::fragment);
 
 	while (!glfwWindowShouldClose(windu))
 	{
@@ -31,7 +31,7 @@ Game::Game(GLFWwindow *windu)
 		glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		triango.draw();
+		triangolo.draw();
 	}
 
 	glfwTerminate();

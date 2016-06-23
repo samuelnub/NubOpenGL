@@ -7,24 +7,51 @@ Render::Render()
 
 Render::~Render()
 {
-	glDeleteVertexArrays(1, &_VAOid);
-	glDeleteBuffers(1, &_VBOid);
+	glDeleteVertexArrays(1, &this->_VAOid);
+	glDeleteBuffers(1, &this->_VBOid);
+	if (this->_doEBO == GL_TRUE)
+	{
+		glDeleteBuffers(1, &this->_EBOid);
+	}
 }
 
 
-void Render::bind(const std::vector<Vertex> &vertData)
+void Render::bind(const std::vector<Vertex> &vertData, const std::vector<GLushort> &indexData)
 {
+	this->_doEBO = (indexData.empty()) ? GL_FALSE : GL_TRUE;
+	this->_VBOsize = vertData.size();
+	if (this->_doEBO == GL_TRUE)
+		this->_EBOsize = sizeof(indexData);
+	
+
 	glGenVertexArrays(1, &this->_VAOid);
 	glBindVertexArray(this->_VAOid);
+
+	if (this->_doEBO == GL_TRUE)
+	{
+		glGenBuffers(1, &this->_EBOid);
+		std::cout << "bound ebo\n";
+	}
 
 	glGenBuffers(1, &this->_VBOid);
 	glBindBuffer(GL_ARRAY_BUFFER, this->_VBOid);
 	glBufferData(
 		GL_ARRAY_BUFFER,
-		vertData.size() * sizeof(Vertex),
+		this->_VBOsize * sizeof(Vertex),
 		&vertData[0],
 		GL_STATIC_DRAW
 		);
+
+	if (this->_doEBO == GL_TRUE)
+	{
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _EBOid);
+		glBufferData(
+			GL_ELEMENT_ARRAY_BUFFER, 
+			this->_EBOsize, 
+			&indexData[0], 
+			GL_STATIC_DRAW
+			);
+	}
 
 	//just coord data for now, every 3 which Vertex encapsulates
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)0);
@@ -32,7 +59,7 @@ void Render::bind(const std::vector<Vertex> &vertData)
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-	glBindVertexArray(0);
+	glBindVertexArray(0); //ps, do not unbind ebo like this, dont unbind it at all, keep it bound to this vao
 }
 
 void Render::shade(const char *vSource, const char *fSource)
@@ -73,15 +100,17 @@ void Render::shade(const char *vSource, const char *fSource)
 	glDeleteShader(this->_fragShader);
 }
 
-void Render::index()
-{
-}
-
-
 void Render::draw()
 {
 	glUseProgram(this->_shaderProgram);
 	glBindVertexArray(_VAOid);
-	glDrawArrays(GL_TRIANGLES, 0, 3);
+	if (this->_doEBO == GL_TRUE)
+	{
+		glDrawElements(GL_TRIANGLES, this->_EBOsize, GL_UNSIGNED_SHORT, 0);
+	}
+	else
+	{
+		glDrawArrays(GL_TRIANGLES, this->_VBOsize, 3);
+	}
 	glBindVertexArray(0);
 }

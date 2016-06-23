@@ -20,7 +20,11 @@ class Render
 private:
 	GLuint _VBOid;
 	GLuint _VAOid;
+	GLboolean _doEBO;
 	GLuint _EBOid;
+
+	GLuint _VBOsize;
+	GLuint _EBOsize;
 
 	GLuint _vertShader;
 	GLuint _fragShader;
@@ -30,11 +34,10 @@ public:
 	Render();
 	~Render();
 
-	void bind(const std::vector<Vertex> &vertData);
+	//if indexData.empty == 1, dont try to use ebo
+	void bind(const std::vector<Vertex> &vertData, const std::vector<GLushort> &indexData = misc::dummyVec);
 
 	void shade(const char *vSource, const char *fSource);
-
-	void index();
 
 	void draw();
 

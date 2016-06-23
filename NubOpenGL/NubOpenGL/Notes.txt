@@ -1,5 +1,13 @@
 22 June 2016
 	opens window successfully, reads window dimensions from global vars for now, like the filthy hog that i am
+	mac compatibility supplied by https://gist.github.com/cbmeeks/5587a11e7856baf819b7
+
+23 June 2016
+	render class which takes in vertex data, able to bind to vbo to it, link vert attrib pointers, and bind vao, compile and link const char* shaders, then draw it, and the destructor deletes the appropriate vao and vbo
+	right now the render class only interprets vert coords, and color is hardcoded within frag shader
 
 TODO:
-	render something in ogl
+	indexing within render class, might implement within "bind" func instead of separate "index" func
+	read glsl shaders from separate file instead of reading it from a const char* like a stupid cucc
+	implement normals and uv members in the Vertex struct in globals.h
+	implement proper input class instead of being a procrastinating dumbo

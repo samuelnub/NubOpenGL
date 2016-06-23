@@ -3,6 +3,7 @@
 #define GLOBALS_H
 
 #include <GLFW\glfw3.h>
+#include <vector>
 
 enum Errors
 {
@@ -23,6 +24,14 @@ namespace windowsettings
 	const int width = 1024;
 	const int height = 768;
 }
+
+//TODO: cheap workarounds for not having null references
+namespace misc
+{
+	const short dummyShort = 69;
+	const std::vector<GLushort> dummyVec = {};
+}
+
 
 typedef struct
 {

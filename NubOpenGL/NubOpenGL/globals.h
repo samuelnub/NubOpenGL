@@ -2,6 +2,8 @@
 #ifndef GLOBALS_H
 #define GLOBALS_H
 
+#include <GLFW\glfw3.h>
+
 enum Errors
 {
 	SUCC = 0,
@@ -21,5 +23,13 @@ namespace windowsettings
 	const int width = 1024;
 	const int height = 768;
 }
+
+typedef struct
+{
+	GLfloat x, y, z;
+	//GLfloat nx, ny, nz;
+	//GLfloat u, v;
+}Vertex;
+
 
 #endif

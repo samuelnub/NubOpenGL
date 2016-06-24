@@ -12,6 +12,7 @@
 
 #include "globals.h"
 #include <GLFW/glfw3.h>
+#include <SOIL\SOIL.h>
 #include <vector>
 
 //TODO: oriented towards static vertex data currently, might add functions to edit subarray info
@@ -23,6 +24,8 @@ private:
 	GLboolean _doEBO;
 	GLuint _EBOid;
 
+	GLuint _texid;
+
 	GLsizei _VBOsize;
 	GLsizei _EBOsize;
 public:
@@ -30,7 +33,7 @@ public:
 	~Render();
 
 	//if indexData.empty == 1, dont try to use ebo
-	void bind(const std::vector<Vertex> &vertData, const std::vector<GLushort> &indexData = misc::dummyVec);
+	void bind(const std::vector<Vertex> &vertData, const GLchar *texPath, const std::vector<GLushort> &indexData = misc::dummyVec);
 
 	void drawVBO();
 	void drawEBO();

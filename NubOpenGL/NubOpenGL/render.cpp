@@ -22,8 +22,6 @@ void Render::bind(const std::vector<Vertex> &vertData, const GLchar *texPath, co
 	this->_VBOsize = vertData.size();
 	if (this->_doEBO == GL_TRUE)
 		this->_EBOsize = sizeof(indexData);
-	
-
 
 	glGenVertexArrays(1, &this->_VAOid);
 	glBindVertexArray(this->_VAOid);
@@ -59,12 +57,12 @@ void Render::bind(const std::vector<Vertex> &vertData, const GLchar *texPath, co
 	glEnableVertexAttribArray(0);
 
 	//this is probably color, for now at least
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)(3 * sizeof(GLfloat)));
-	glEnableVertexAttribArray(1);
+	/*glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)(3 * sizeof(GLfloat)));
+	glEnableVertexAttribArray(1);*/
 
 	//these are uv coords
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)(6 * sizeof(GLfloat)));
-	glEnableVertexAttribArray(2);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)(3 * sizeof(GLfloat)));
+	glEnableVertexAttribArray(1);
 	
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
@@ -88,8 +86,23 @@ void Render::bind(const std::vector<Vertex> &vertData, const GLchar *texPath, co
 	glGenerateMipmap(GL_TEXTURE_2D);
 	SOIL_free_image_data(img);
 	glBindTexture(GL_TEXTURE_2D, 0); //unbind tex when done
-
 }
+
+void Render::translate(const glm::vec3 &newPos)
+{
+	this->_model = glm::translate(this->_model, newPos);
+}
+
+void Render::scale(const glm::vec3 &newScale)
+{
+	this->_model = glm::scale(this->_model, newScale);
+}
+
+void Render::rotate(const GLfloat &newDeg, const glm::vec3 &newAxis)
+{
+	this->_model = glm::rotate(this->_model, glm::radians(newDeg), newAxis);
+}
+
 
 //this isnt how shaders work you nimbahoon
 /*void Render::shade(const char *vSource, const char *fSource)
@@ -130,22 +143,32 @@ void Render::bind(const std::vector<Vertex> &vertData, const GLchar *texPath, co
 	glDeleteShader(this->_fragShader);
 }*/
 
-void Render::drawVBO()
+void Render::drawVBO(const GLint &modelLoc)
 {
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, this->_texid);
 
 	glBindVertexArray(_VAOid);
+
+	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(this->_model));
+
 	glDrawArrays(GL_TRIANGLES, 0, this->_VBOsize);
 	glBindVertexArray(0);
+
+	this->_model = glm::mat4();
 }
 
-void Render::drawEBO()
+void Render::drawEBO(const GLint &modelLoc)
 {
-	//glActiveTexture(GL_TEXTURE0); //no texture units/multitexturing yet ;(( too lazy
+	glActiveTexture(GL_TEXTURE0); //no texture units/multitexturing yet ;(( too lazy
 	glBindTexture(GL_TEXTURE_2D, this->_texid);
 
 	glBindVertexArray(_VAOid);
+
+	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(this->_model));
+
 	glDrawElements(GL_TRIANGLES, this->_EBOsize, GL_UNSIGNED_SHORT, 0);
 	glBindVertexArray(0);
+
+	this->_model = glm::mat4(); //reset the matrix, or else it'll linger each frame and just multiply out of control lol
 }

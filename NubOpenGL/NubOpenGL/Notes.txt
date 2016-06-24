@@ -16,9 +16,18 @@
 	separated drawing vbo and ebo per frame, must be user defined, just for retarded microoptimisation
 	render class implements compulsory texture, so vert colours arent really needed, unless it gets used as normals in the future
 
+	went 3d, cant go back, save my soul
+	basic 3d, implements mvp matrices within game loop, will probably abstract away
+	vert shader multiples m * v * p backwards and spits out those positions
+	removed redundant vertex info for colors, since we have textures
+
+	moved model transformations to a per-render object basis
+	test out transformations on various Render objects like a little child
+	
 
 TODO:
-	implement normals and uv members in the Vertex struct in globals.h
+	implement normals in the Vertex struct in globals.h
 	implement proper input class instead of being a procrastinating dumbo
 	add multitexturing support
-	go 3d
+	encapsulate mvp transformations to a separate class that my *input class can utilise for controls, *hopefully soon, you lazy fibo
+	"player" class, which implements an fps-style control scheme, controls view matrix, and possibly projection

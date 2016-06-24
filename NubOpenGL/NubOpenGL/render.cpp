@@ -16,7 +16,7 @@ Render::~Render()
 }
 
 
-void Render::bind(const std::vector<Vertex> &vertData, const std::vector<GLushort> &indexData)
+void Render::bind(const std::vector<Vertex> &vertData, const GLchar *texPath, const std::vector<GLushort> &indexData)
 {
 	this->_doEBO = (indexData.empty()) ? GL_FALSE : GL_TRUE;
 	this->_VBOsize = vertData.size();
@@ -61,10 +61,34 @@ void Render::bind(const std::vector<Vertex> &vertData, const std::vector<GLushor
 	//this is probably color, for now at least
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)(3 * sizeof(GLfloat)));
 	glEnableVertexAttribArray(1);
+
+	//these are uv coords
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)(6 * sizeof(GLfloat)));
+	glEnableVertexAttribArray(2);
 	
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	glBindVertexArray(0); //ps, do not unbind ebo like this, dont unbind it at all, keep it bound to this vao
+
+
+	//load and bind texture
+	glGenTextures(1, &this->_texid);
+	glBindTexture(GL_TEXTURE_2D, this->_texid);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+
+	int width, height;
+	unsigned char *img = SOIL_load_image(texPath, &width, &height, 0, SOIL_LOAD_RGBA);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, img);
+	glGenerateMipmap(GL_TEXTURE_2D);
+	SOIL_free_image_data(img);
+	glBindTexture(GL_TEXTURE_2D, 0); //unbind tex when done
+
 }
 
 //this isnt how shaders work you nimbahoon
@@ -108,6 +132,9 @@ void Render::bind(const std::vector<Vertex> &vertData, const std::vector<GLushor
 
 void Render::drawVBO()
 {
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, this->_texid);
+
 	glBindVertexArray(_VAOid);
 	glDrawArrays(GL_TRIANGLES, 0, this->_VBOsize);
 	glBindVertexArray(0);
@@ -115,6 +142,9 @@ void Render::drawVBO()
 
 void Render::drawEBO()
 {
+	//glActiveTexture(GL_TEXTURE0); //no texture units/multitexturing yet ;(( too lazy
+	glBindTexture(GL_TEXTURE_2D, this->_texid);
+
 	glBindVertexArray(_VAOid);
 	glDrawElements(GL_TRIANGLES, this->_EBOsize, GL_UNSIGNED_SHORT, 0);
 	glBindVertexArray(0);

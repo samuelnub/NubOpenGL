@@ -24,8 +24,8 @@ Game::Game(GLFWwindow *windu)
 
 	Shader shades("shaders/simpleVert.glsl", "shaders/simpleFrag.glsl");
 
-	triangolo.bind(verts::triangle1);
-	quaddo.bind(verts::quad1, verts::quad1indices);
+	triangolo.bind(verts::triangle1, "textures/illuminati.png");
+	quaddo.bind(verts::quad1, "textures/cooldog.jpg", verts::quad1indices);
 
 
 	while (!glfwWindowShouldClose(windu))
@@ -36,10 +36,10 @@ Game::Game(GLFWwindow *windu)
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		shades.use();
-		
+
 		triangolo.drawVBO();
 		quaddo.drawEBO();
-
+		
 		glfwSwapBuffers(windu);
 	}
 

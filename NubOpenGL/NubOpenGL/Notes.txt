@@ -14,7 +14,11 @@
 	spent 5 hours trying to figure out why glsl shaders wouldnt apply, then realised that i didnt link the shaders in the shader constructor, nice one idiot
 	vertex currently holds coords and colors, render class interprets that and glsl shaders just pass out whats given
 	separated drawing vbo and ebo per frame, must be user defined, just for retarded microoptimisation
+	render class implements compulsory texture, so vert colours arent really needed, unless it gets used as normals in the future
+
 
 TODO:
 	implement normals and uv members in the Vertex struct in globals.h
 	implement proper input class instead of being a procrastinating dumbo
+	add multitexturing support
+	go 3d

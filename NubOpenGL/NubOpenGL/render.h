@@ -23,13 +23,8 @@ private:
 	GLboolean _doEBO;
 	GLuint _EBOid;
 
-	GLuint _VBOsize;
-	GLuint _EBOsize;
-
-	GLuint _vertShader;
-	GLuint _fragShader;
-	GLuint _shaderProgram;
-
+	GLsizei _VBOsize;
+	GLsizei _EBOsize;
 public:
 	Render();
 	~Render();
@@ -37,9 +32,8 @@ public:
 	//if indexData.empty == 1, dont try to use ebo
 	void bind(const std::vector<Vertex> &vertData, const std::vector<GLushort> &indexData = misc::dummyVec);
 
-	void shade(const char *vSource, const char *fSource);
-
-	void draw();
+	void drawVBO();
+	void drawEBO();
 
 protected:
 

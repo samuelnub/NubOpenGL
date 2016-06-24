@@ -23,6 +23,7 @@ namespace windowsettings
 {
 	const int width = 1024;
 	const int height = 768;
+	const char name[] = "ayy lmao";
 }
 
 //TODO: cheap workarounds for not having null references
@@ -37,8 +38,7 @@ typedef struct
 {
 	GLfloat x, y, z;
 	GLfloat cx, cy, cz;
-	//GLfloat nx, ny, nz;
-	//GLfloat u, v;
+	GLfloat ux, uy;
 }Vertex;
 
 

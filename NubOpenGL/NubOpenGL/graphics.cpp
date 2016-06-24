@@ -15,7 +15,7 @@ Graphics::Graphics()
 	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
-	this->_windu = glfwCreateWindow(windowsettings::width, windowsettings::height, "ayy", nullptr, nullptr);
+	this->_windu = glfwCreateWindow(windowsettings::width, windowsettings::height, windowsettings::name, nullptr, nullptr);
 	if (this->_windu == nullptr)
 	{
 		std::cout << "couldnt create glfw window :(((\n";

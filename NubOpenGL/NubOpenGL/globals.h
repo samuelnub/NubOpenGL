@@ -37,7 +37,7 @@ namespace misc
 typedef struct
 {
 	GLfloat x, y, z;
-	GLfloat cx, cy, cz;
+	//GLfloat cx, cy, cz; //dont need colors, pfft, we've got textures now, what is this? the dark ages?
 	GLfloat ux, uy;
 }Vertex;
 

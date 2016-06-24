@@ -38,6 +38,8 @@ Graphics::Graphics()
 	glfwGetFramebufferSize(this->_windu, &width, &height);
 	glViewport(0, 0, width, height);
 
+	glEnable(GL_DEPTH_TEST);
+
 	Game gammond(this->_windu);
 }
 

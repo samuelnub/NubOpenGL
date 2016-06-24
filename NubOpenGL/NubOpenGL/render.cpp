@@ -24,6 +24,7 @@ void Render::bind(const std::vector<Vertex> &vertData, const std::vector<GLushor
 		this->_EBOsize = sizeof(indexData);
 	
 
+
 	glGenVertexArrays(1, &this->_VAOid);
 	glBindVertexArray(this->_VAOid);
 
@@ -53,16 +54,21 @@ void Render::bind(const std::vector<Vertex> &vertData, const std::vector<GLushor
 			);
 	}
 
-	//just coord data for now, every 3 which Vertex encapsulates
+	//coords, first 3
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)0);
 	glEnableVertexAttribArray(0);
 
+	//this is probably color, for now at least
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)(3 * sizeof(GLfloat)));
+	glEnableVertexAttribArray(1);
+	
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	glBindVertexArray(0); //ps, do not unbind ebo like this, dont unbind it at all, keep it bound to this vao
 }
 
-void Render::shade(const char *vSource, const char *fSource)
+//this isnt how shaders work you nimbahoon
+/*void Render::shade(const char *vSource, const char *fSource)
 {
 	this->_vertShader = glCreateShader(GL_VERTEX_SHADER);
 	glShaderSource(this->_vertShader, 1, &vSource, NULL);
@@ -98,19 +104,18 @@ void Render::shade(const char *vSource, const char *fSource)
 
 	glDeleteShader(this->_vertShader);
 	glDeleteShader(this->_fragShader);
+}*/
+
+void Render::drawVBO()
+{
+	glBindVertexArray(_VAOid);
+	glDrawArrays(GL_TRIANGLES, 0, this->_VBOsize);
+	glBindVertexArray(0);
 }
 
-void Render::draw()
+void Render::drawEBO()
 {
-	glUseProgram(this->_shaderProgram);
 	glBindVertexArray(_VAOid);
-	if (this->_doEBO == GL_TRUE)
-	{
-		glDrawElements(GL_TRIANGLES, this->_EBOsize, GL_UNSIGNED_SHORT, 0);
-	}
-	else
-	{
-		glDrawArrays(GL_TRIANGLES, 0, this->_VBOsize);
-	}
+	glDrawElements(GL_TRIANGLES, this->_EBOsize, GL_UNSIGNED_SHORT, 0);
 	glBindVertexArray(0);
 }

@@ -6,8 +6,15 @@
 	render class which takes in vertex data, able to bind to vbo to it, link vert attrib pointers, and bind vao, compile and link const char* shaders, then draw it, and the destructor deletes the appropriate vao and vbo
 	right now the render class only interprets vert coords, and color is hardcoded within frag shader
 	implemented indexing within "bind" func, makes it so that giving index is optional
+	project settings, made "working directory" the same dir containing source
+
+24 June 2016
+	render class doesnt compile and link shaders for each god damn object anymore
+	shader class implemented and utilised in game class
+	spent 5 hours trying to figure out why glsl shaders wouldnt apply, then realised that i didnt link the shaders in the shader constructor, nice one idiot
+	vertex currently holds coords and colors, render class interprets that and glsl shaders just pass out whats given
+	separated drawing vbo and ebo per frame, must be user defined, just for retarded microoptimisation
 
 TODO:
-	read glsl shaders from separate file instead of reading it from a const char* like a stupid cucc
 	implement normals and uv members in the Vertex struct in globals.h
 	implement proper input class instead of being a procrastinating dumbo

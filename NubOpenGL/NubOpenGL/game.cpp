@@ -9,6 +9,7 @@
 #include "game.h"
 #include "globals.h"
 #include "render.h"
+#include "shader.h"
 #include <iostream>
 
 //temp includes for basic const char*-based glsl shaders, and the vertices of a triangle more basic than my mother
@@ -19,19 +20,27 @@ Game::Game(GLFWwindow *windu)
 {
 
 	Render triangolo;
+	Render quaddo;
 
-	triangolo.bind(verts::quad1, verts::quad1indices);
-	triangolo.shade(shaders::vertex, shaders::fragment);
+	Shader shades("shaders/simpleVert.glsl", "shaders/simpleFrag.glsl");
+
+	triangolo.bind(verts::triangle1);
+	quaddo.bind(verts::quad1, verts::quad1indices);
+
 
 	while (!glfwWindowShouldClose(windu))
 	{
 		glfwPollEvents();
-		glfwSwapBuffers(windu);
 
 		glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		triangolo.draw();
+		shades.use();
+		
+		triangolo.drawVBO();
+		quaddo.drawEBO();
+
+		glfwSwapBuffers(windu);
 	}
 
 	glfwTerminate();

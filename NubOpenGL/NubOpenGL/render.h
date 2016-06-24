@@ -11,9 +11,14 @@
 #endif
 
 #include "globals.h"
+#include "shader.h"
 #include <GLFW/glfw3.h>
 #include <SOIL\SOIL.h>
 #include <vector>
+
+#include <glm\glm.hpp>
+#include <glm\gtc\matrix_transform.hpp>
+#include <glm\gtc\type_ptr.hpp>
 
 //TODO: oriented towards static vertex data currently, might add functions to edit subarray info
 class Render
@@ -26,6 +31,8 @@ private:
 
 	GLuint _texid;
 
+	glm::mat4 _model;
+
 	GLsizei _VBOsize;
 	GLsizei _EBOsize;
 public:
@@ -35,8 +42,12 @@ public:
 	//if indexData.empty == 1, dont try to use ebo
 	void bind(const std::vector<Vertex> &vertData, const GLchar *texPath, const std::vector<GLushort> &indexData = misc::dummyVec);
 
-	void drawVBO();
-	void drawEBO();
+	void translate(const glm::vec3 &newPos);
+	void scale(const glm::vec3 &newScale);
+	void rotate(const GLfloat &newDeg, const glm::vec3 &newAxis);
+
+	void drawVBO(const GLint &modelLoc);
+	void drawEBO(const GLint &modelLoc);
 
 protected:
 

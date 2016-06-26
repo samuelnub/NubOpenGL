@@ -16,12 +16,11 @@
 #include "shadersTest.h"
 #include "verticesTest.h"
 
-
 Game::Game(GLFWwindow *windu)
 {
 	Input::InputSetup(windu);
 
-	G::player.spawn(glm::vec3((0.0f), (0.0f), (5.0f)));
+	G::player.spawn(glm::vec3((gamesettings::SPAWNX),(gamesettings::SPAWNY),(gamesettings::SPAWNZ)));
 
 	Render triangolo;
 	Render quaddo;

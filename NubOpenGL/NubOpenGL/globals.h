@@ -12,6 +12,24 @@ enum Errors
 	SUPER_BAD_ERROR
 };
 
+namespace gamesettings
+{
+	enum CamMovement 
+	{
+		FORWARD,
+		BACKWARD,
+		LEFT,
+		RIGHT
+	};
+
+	// Default camera values
+	const GLfloat YAW = -90.0f;
+	const GLfloat PITCH = 0.0f;
+	const GLfloat SPEED = 4.0f;
+	const GLfloat SENSITIVTY = 0.35f;
+	const GLfloat ZOOM = 90.0f;
+}
+
 namespace glsettings
 {
 	const int majorVer = 3;
@@ -21,8 +39,8 @@ namespace glsettings
 //TODO: probably gonna read this from a file eventually lol
 namespace windowsettings
 {
-	const int width = 1024;
-	const int height = 768;
+	const int width = 1200;
+	const int height = 800;
 	const char name[] = "ayy lmao";
 }
 

@@ -38,14 +38,17 @@ void Player::setMatrices(GLint & viewLoc, GLint & projLoc)
 void Player::processKeyboard(const std::vector<bool> &keys, GLfloat &deltaTime)
 {
 	GLfloat vel = this->_moveSpeed * deltaTime;
-	if (keys.at(GLFW_KEY_W))
+	if (keys.at(gamesettings::controls::FORWARD))
 		this->_pos += this->_front * vel;
-	if (keys.at(GLFW_KEY_S))
+	if (keys.at(gamesettings::controls::BACKWARD))
 		this->_pos -= this->_front * vel;
-	if (keys.at(GLFW_KEY_A))
+	if (keys.at(gamesettings::controls::LEFT))
 		this->_pos -= this->_right * vel;
-	if (keys.at(GLFW_KEY_D))
+	if (keys.at(gamesettings::controls::RIGHT))
 		this->_pos += this->_right * vel;
+
+	if (keys.at(gamesettings::controls::HOME))
+		this->_pos = glm::vec3((gamesettings::SPAWNX), (gamesettings::SPAWNY), (gamesettings::SPAWNZ));
 }
 
 void Player::processMouseMove(GLfloat xoffset, GLfloat yoffset, GLboolean constrainPitch)

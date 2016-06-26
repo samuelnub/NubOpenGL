@@ -24,10 +24,13 @@
 	moved model transformations to a per-render object basis
 	test out transformations on various Render objects like a little child
 	
+26 June 2016
+	implemented "static" input class that resides within game.h and .cpp, too dumb to make it separate yet, because Input needs a reference to all game objects that need input, for now at least
+	player class, which just encapsulates movement and manipulation of view and projection matrices, "movement" aka wasd keys are a bit janky
+	circular dependencies are the bane of my feeble existance
 
 TODO:
 	implement normals in the Vertex struct in globals.h
-	implement proper input class instead of being a procrastinating dumbo
+	implement proper input class instead of being a procrastinating dumbo and having it clogging the main game cpp
 	add multitexturing support
-	encapsulate mvp transformations to a separate class that my *input class can utilise for controls, *hopefully soon, you lazy fibo
-	"player" class, which implements an fps-style control scheme, controls view matrix, and possibly projection
+	fix up player WASD movement and stuttering

@@ -12,6 +12,12 @@
 
 #include <GLFW/glfw3.h>
 
+class Game 
+{
+public:
+	Game(GLFWwindow *windu);
+};
+
 class Graphics
 {
 private:

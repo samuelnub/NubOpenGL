@@ -32,13 +32,15 @@ public:
 	static void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 	static void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 
-protected:
+
+	//lord forgive me for having public member variables
 	static std::vector<bool> _keys;
 	static GLfloat _lastX;
 	static GLfloat _lastY;
 	static bool _firstMouse;
 	static GLfloat _deltaTime;
 	static GLfloat _lastFrame;
+protected:
 
 };
 

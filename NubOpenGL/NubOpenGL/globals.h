@@ -14,13 +14,10 @@ enum Errors
 
 namespace gamesettings
 {
-	enum CamMovement 
-	{
-		FORWARD,
-		BACKWARD,
-		LEFT,
-		RIGHT
-	};
+	//initial player spawn coords
+	const GLfloat SPAWNX = 0.0f;
+	const GLfloat SPAWNY = 0.0f;
+	const GLfloat SPAWNZ = 3.0f;
 
 	// Default camera values
 	const GLfloat YAW = -90.0f;
@@ -28,6 +25,16 @@ namespace gamesettings
 	const GLfloat SPEED = 4.0f;
 	const GLfloat SENSITIVTY = 0.35f;
 	const GLfloat ZOOM = 90.0f;
+
+	namespace controls
+	{
+		const GLint FORWARD = GLFW_KEY_W;
+		const GLint BACKWARD = GLFW_KEY_S;
+		const GLint LEFT = GLFW_KEY_A;
+		const GLint RIGHT = GLFW_KEY_D;
+
+		const GLint HOME = GLFW_KEY_H;
+	}
 }
 
 namespace glsettings

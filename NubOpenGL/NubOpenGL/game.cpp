@@ -118,7 +118,7 @@ void Input::key_callback(GLFWwindow *window, int key, int scancode, int action, 
 	}
 
 	//All things that use key input==============================
-	G::player.processKeyboard(Input::_keys, Input::_deltaTime);
+	//G::player.processKeyboard(Input::_keys, Input::_deltaTime);  //handled each frame instead of called here twice
 }
 
 void Input::scroll_callback(GLFWwindow *window, double xoffset, double yoffset)

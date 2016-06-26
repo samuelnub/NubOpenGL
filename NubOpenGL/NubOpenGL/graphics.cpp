@@ -1,6 +1,5 @@
 #include "graphics.h"
 #include "globals.h"
-#include "game.h"
 #include <iostream>
 
 

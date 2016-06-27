@@ -30,6 +30,11 @@ void Player::setMatrices()
 	this->_projection = glm::perspective(this->_zoom, (GLfloat)windowsettings::width / (GLfloat)windowsettings::height, 0.1f, 1000.0f);
 }
 
+glm::vec3 Player::getPos()
+{
+	return this->_pos;
+}
+
 glm::mat4 Player::getView()
 {
 	return this->_view;

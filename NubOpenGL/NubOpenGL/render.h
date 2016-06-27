@@ -26,9 +26,11 @@ class Render
 private:
 	GLuint _VBOid;
 	GLuint _VAOid;
+
 	GLboolean _doEBO;
 	GLuint _EBOid;
 
+	GLboolean _doTex;
 	GLuint _texid;
 
 	glm::mat4 _model;
@@ -46,8 +48,12 @@ public:
 	void scale(const glm::vec3 &newScale);
 	void rotate(const GLfloat &newDeg, const glm::vec3 &newAxis);
 
-	void drawVBO(const GLint &modelLoc);
-	void drawEBO(const GLint &modelLoc);
+	glm::mat4 getModel();
+
+	void resetModel();
+
+	void drawVBO();
+	void drawEBO();
 
 protected:
 

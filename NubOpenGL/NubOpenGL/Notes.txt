@@ -29,6 +29,10 @@
 	player class, which just encapsulates movement and manipulation of view and projection matrices, "movement" aka wasd keys are a bit janky
 	circular dependencies are the bane of my feeble existance
 
+27 June 2016
+	getting into lighting, shader handling is still a bigger mistake than my birth though, will try and get the gist of how to handle it eventually i hope
+	render and player class no longer send the uniforms to the shaders, now done within main loop, temporary till i can encapsulate this uniform sending process
+
 TODO:
 	implement normals in the Vertex struct in globals.h
 	implement proper input class instead of being a procrastinating dumbo and having it clogging the main game cpp

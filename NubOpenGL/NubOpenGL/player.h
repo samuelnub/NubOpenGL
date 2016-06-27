@@ -33,13 +33,22 @@ private:
 	GLfloat _mouseSensitivity;
 	GLfloat _zoom;
 
+	glm::mat4 _view;
+	glm::mat4 _projection;
+
 public:
 	Player();
 	~Player();
 
 	void spawn(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), GLfloat yaw = gamesettings::YAW, GLfloat pitch = gamesettings::PITCH);
 
-	void setMatrices(GLint &viewLoc, GLint &projLoc);
+	void setMatrices();
+
+	glm::mat4 getView();
+	glm::mat4 getProj();
+
+	void resetView();
+	void resetProj();
 
 	void processKeyboard(const std::vector<bool> &keys, GLfloat &deltaTime);
 	void processMouseMove(GLfloat xoffset, GLfloat yoffset, GLboolean constrainPitch = true);

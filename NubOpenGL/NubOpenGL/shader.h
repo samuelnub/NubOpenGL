@@ -15,6 +15,10 @@
 #include <GL/glew.h>
 #endif
 
+#include <glm\glm.hpp>
+#include <glm\gtc\matrix_transform.hpp>
+#include <glm\gtc\type_ptr.hpp>
+
 class Shader
 {
 private:
@@ -22,6 +26,23 @@ private:
 public:
 	GLuint _program;
 	Shader(const GLchar *vertPath, const GLchar *fragPath);
+
+	//these functions dont gosh darn work
+	void send(GLuint location, GLfloat value);
+	void send(GLuint location, glm::mat4 const &matrix);
+	template<typename T> 
+	Shader &send(std::string const &name, T&& value)
+	{
+		int location = glGetUniformLocation(this->_program, name.c_str());
+		if (location == -1)
+			std::cout << "missing uniform " << name.c_str() << ":(((\n";
+		else
+			this->send(location, std::forward<T>(value));
+		return *this;
+	}
+
+
+
 	void use();
 
 };

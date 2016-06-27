@@ -81,6 +81,16 @@ Shader::Shader(const GLchar *vertPath, const GLchar *fragPath)
 	glDeleteShader(frag);
 }
 
+void Shader::send(GLuint location, GLfloat value)
+{
+	glUniform1f(location, value);
+}
+
+void Shader::send(GLuint location, glm::mat4 const & matrix)
+{
+	glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
+}
+
 void Shader::use()
 {
 	glUseProgram(this->_program);

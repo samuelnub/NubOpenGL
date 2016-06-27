@@ -56,13 +56,13 @@ void Render::bind(const std::vector<Vertex> &vertData, const GLchar *texPath, co
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)0);
 	glEnableVertexAttribArray(0);
 
-	//this is probably color, for now at least
-	/*glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)(3 * sizeof(GLfloat)));
-	glEnableVertexAttribArray(1);*/
-
-	//these are uv coords
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)(3 * sizeof(GLfloat)));
+	//normals, next 3
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)(3 * sizeof(GLfloat)));
 	glEnableVertexAttribArray(1);
+
+	//uv, next 2
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)(6 * sizeof(GLfloat)));
+	glEnableVertexAttribArray(2);
 	
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
@@ -103,6 +103,16 @@ void Render::rotate(const GLfloat &newDeg, const glm::vec3 &newAxis)
 	this->_model = glm::rotate(this->_model, glm::radians(newDeg), newAxis);
 }
 
+glm::vec3 Render::getPos()
+{
+	glm::vec3 tempPos;
+	tempPos.x = this->_model[0][0] / this->_model[3][3];
+	tempPos.y = this->_model[1][1] / this->_model[3][3];
+	tempPos.z = this->_model[2][2] / this->_model[3][3];
+
+	return glm::vec3(tempPos);
+}
+
 glm::mat4 Render::getModel()
 {
 	return this->_model;
@@ -110,7 +120,6 @@ glm::mat4 Render::getModel()
 
 void Render::resetModel()
 {
-
 	this->_model = glm::mat4();
 }
 

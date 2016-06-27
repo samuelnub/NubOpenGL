@@ -48,6 +48,7 @@ public:
 	void scale(const glm::vec3 &newScale);
 	void rotate(const GLfloat &newDeg, const glm::vec3 &newAxis);
 
+	glm::vec3 getPos();
 	glm::mat4 getModel();
 
 	void resetModel();

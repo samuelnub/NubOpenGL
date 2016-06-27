@@ -63,7 +63,7 @@ namespace misc
 typedef struct
 {
 	GLfloat x, y, z;
-	//GLfloat cx, cy, cz; //will probably be used as normals in the future
+	GLfloat nx, ny, nz; 
 	GLfloat ux, uy;
 }Vertex;
 

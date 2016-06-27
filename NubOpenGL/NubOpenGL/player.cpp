@@ -23,16 +23,31 @@ void Player::spawn(glm::vec3 position, glm::vec3 up, GLfloat yaw, GLfloat pitch)
 	this->updateVectors();
 }
 
-void Player::setMatrices(GLint & viewLoc, GLint & projLoc)
+void Player::setMatrices()
 {
-	glm::mat4 view;
-	view = glm::lookAt(this->_pos, this->_pos + this->_front, this->_up);
+	this->_view = glm::lookAt(this->_pos, this->_pos + this->_front, this->_up);
 
-	glm::mat4 projection;
-	projection = glm::perspective(this->_zoom, (GLfloat)windowsettings::width / (GLfloat)windowsettings::height, 0.1f, 1000.0f);
+	this->_projection = glm::perspective(this->_zoom, (GLfloat)windowsettings::width / (GLfloat)windowsettings::height, 0.1f, 1000.0f);
+}
 
-	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
+glm::mat4 Player::getView()
+{
+	return this->_view;
+}
+
+glm::mat4 Player::getProj()
+{
+	return this->_projection;
+}
+
+void Player::resetView()
+{
+	this->_view = glm::mat4();
+}
+
+void Player::resetProj()
+{
+	this->_projection = glm::mat4();
 }
 
 void Player::processKeyboard(const std::vector<bool> &keys, GLfloat &deltaTime)

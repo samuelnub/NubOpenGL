@@ -33,6 +33,9 @@
 	getting into lighting, shader handling is still a bigger mistake than my birth though, will try and get the gist of how to handle it eventually i hope
 	render and player class no longer send the uniforms to the shaders, now done within main loop, temporary till i can encapsulate this uniform sending process
 
+	got phong shading to work with ambient, diffuse and specular highlights
+	still to dumb to be able to extract model position from its model matrix
+
 TODO:
 	implement normals in the Vertex struct in globals.h
 	implement proper input class instead of being a procrastinating dumbo and having it clogging the main game cpp

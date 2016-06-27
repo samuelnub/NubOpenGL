@@ -44,6 +44,7 @@ public:
 
 	void setMatrices();
 
+	glm::vec3 getPos();
 	glm::mat4 getView();
 	glm::mat4 getProj();
 

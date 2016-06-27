@@ -56,13 +56,14 @@ namespace misc
 {
 	const short dummyShort = 69;
 	const std::vector<GLushort> dummyVec = {};
+	const GLchar dummyGLchars[] = { '\0' };
 }
 
 
 typedef struct
 {
 	GLfloat x, y, z;
-	//GLfloat cx, cy, cz; //dont need colors, pfft, we've got textures now, what is this? the dark ages?
+	//GLfloat cx, cy, cz; //will probably be used as normals in the future
 	GLfloat ux, uy;
 }Vertex;
 

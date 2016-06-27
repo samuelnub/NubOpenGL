@@ -25,12 +25,18 @@ Game::Game(GLFWwindow *windu)
 	Render triangolo;
 	Render quaddo;
 	Render cuban;
+	Render cubanlazy;
+	Render cubanlamp;
+	glm::vec3 cubanlampPos;
 
-	Shader shades("shaders/simpleVert.glsl", "shaders/simpleFrag.glsl");
+	Shader shades("shaders/colorsVert.glsl", "shaders/colorsFrag.glsl");
+	Shader lampo("shaders/lampVert.glsl", "shaders/lampFrag.glsl");
 
 	triangolo.bind(verts::triangle1, "textures/illuminati.png");
 	quaddo.bind(verts::quad1, "textures/cooldog.jpg", verts::quad1indices);
 	cuban.bind(verts::cube1, "textures/cromulon.png");
+	cubanlazy.bind(verts::cube1, "textures/cromulon.png");
+	cubanlamp.bind(verts::cube1, "textures/cooldog.jpg");
 
 	while (!glfwWindowShouldClose(windu))
 	{
@@ -42,29 +48,92 @@ Game::Game(GLFWwindow *windu)
 		glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+		GLint modelLoc, viewLoc, projLoc;
+
+
+		//use lamp shader
+		lampo.use();
+
+		modelLoc = glGetUniformLocation(lampo._program, "model");
+		viewLoc = glGetUniformLocation(lampo._program, "view");
+		projLoc = glGetUniformLocation(lampo._program, "projection");
+		//the lamp shader also needs to know the view and proj matrices, although our "camera" is using the shades shader! tldr just send the mvp to every shader (if it supports it)
+
+		cubanlamp.rotate((GLfloat)glfwGetTime() * 40.0f, glm::vec3(0.7f, 0.2f, 0.8f));
+		cubanlamp.translate(glm::vec3(1.0f, 0.4f, 4.0f));
+
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(cubanlamp.getModel()));
+		cubanlamp.drawVBO();
+
+		G::player.setMatrices(); //"translate" the player
+
+		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(G::player.getView()));
+		glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(G::player.getProj()));
+
+
+
+
+
+		//use shades , btw, doesnt accept textures atm
 		shades.use();
 
-		//true mvp :'))) will probably abstract to separate class
+		//specific uniforms to send to ^shades, besides the usual mvp
+		GLint objectColorLoc = glGetUniformLocation(shades._program, "objectColor");
+		GLint lightColorLoc = glGetUniformLocation(shades._program, "lightColor");
+		GLint lightPosLoc = glGetUniformLocation(shades._program, "lightPos");
+		GLint viewPosLoc = glGetUniformLocation(shades._program, "viewPos");
+		glUniform3f(objectColorLoc, 0.8f, 0.5f, 0.7f);
+		glUniform3f(lightColorLoc, 1.0f, 1.0f, 1.0f);
+		glUniform3f(lightPosLoc, cubanlamp.getPos().x, cubanlamp.getPos().y, cubanlamp.getPos().z);
+		glUniform3f(viewPosLoc, G::player.getPos().x, G::player.getPos().y, G::player.getPos().z);
 
-		//prepare their uniforms to pass to shaders
-		GLint modelLoc = glGetUniformLocation(shades._program, "model");
-		GLint viewLoc = glGetUniformLocation(shades._program, "view");
-		GLint projLoc = glGetUniformLocation(shades._program, "projection");
 
-		//pass to shaders
-		G::player.setMatrices(viewLoc, projLoc);
+		modelLoc = glGetUniformLocation(shades._program, "model");
+		viewLoc = glGetUniformLocation(shades._program, "view");
+		projLoc = glGetUniformLocation(shades._program, "projection");
 
-		cuban.rotate((GLfloat)glfwGetTime() * 50.0f, glm::vec3(0.8f, 0.0f, 3.0f));
+		cuban.rotate((GLfloat)glfwGetTime() * 30.0f, glm::vec3(0.8f, 0.0f, 3.0f));
 		cuban.translate(glm::vec3(0.1f, 0.2f, -5.0f));
 
+		cubanlazy.translate(glm::vec3(1.0f, 2.0f, 2.5f));
+
+		triangolo.translate(glm::vec3(1.0f, 4.0f, 0.2f));
 		triangolo.rotate((GLfloat)glfwGetTime() * -80.0f, glm::vec3(0.0f, 0.0f, 1.0f));
 
 		quaddo.rotate((GLfloat)glfwGetTime() * 50.0f, glm::vec3(0.5f, 0.0f, 0.2f));
 		quaddo.translate(glm::vec3(0.4f, 0.0f, 0.0f));
 
-		triangolo.drawVBO(modelLoc);
-		quaddo.drawEBO(modelLoc);
-		cuban.drawVBO(modelLoc);
+
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(triangolo.getModel()));
+		triangolo.drawVBO();
+
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(quaddo.getModel()));
+		quaddo.drawEBO();
+
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(cubanlazy.getModel()));
+		cubanlazy.drawVBO();
+
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(cuban.getModel()));
+		cuban.drawVBO();
+
+		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(G::player.getView()));
+		glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(G::player.getProj()));
+
+
+
+
+
+
+		//reset all these gosh darn matrices
+		triangolo.resetModel();
+		quaddo.resetModel();
+		cuban.resetModel();
+		cubanlazy.resetModel();
+		cubanlamp.resetModel();
+
+		G::player.resetView();
+		G::player.resetProj();
+
 
 		glfwSwapBuffers(windu);
 	}

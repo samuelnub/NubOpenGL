@@ -103,6 +103,17 @@ void Render::rotate(const GLfloat &newDeg, const glm::vec3 &newAxis)
 	this->_model = glm::rotate(this->_model, glm::radians(newDeg), newAxis);
 }
 
+glm::mat4 Render::getModel()
+{
+	return this->_model;
+}
+
+void Render::resetModel()
+{
+
+	this->_model = glm::mat4();
+}
+
 
 //this isnt how shaders work you nimbahoon
 /*void Render::shade(const char *vSource, const char *fSource)
@@ -143,32 +154,24 @@ void Render::rotate(const GLfloat &newDeg, const glm::vec3 &newAxis)
 	glDeleteShader(this->_fragShader);
 }*/
 
-void Render::drawVBO(const GLint &modelLoc)
+void Render::drawVBO()
 {
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, this->_texid);
 
 	glBindVertexArray(_VAOid);
 
-	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(this->_model));
-
 	glDrawArrays(GL_TRIANGLES, 0, this->_VBOsize);
 	glBindVertexArray(0);
-
-	this->_model = glm::mat4();
 }
 
-void Render::drawEBO(const GLint &modelLoc)
+void Render::drawEBO()
 {
 	glActiveTexture(GL_TEXTURE0); //no texture units/multitexturing yet ;(( too lazy
 	glBindTexture(GL_TEXTURE_2D, this->_texid);
 
 	glBindVertexArray(_VAOid);
 
-	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(this->_model));
-
 	glDrawElements(GL_TRIANGLES, this->_EBOsize, GL_UNSIGNED_SHORT, 0);
 	glBindVertexArray(0);
-
-	this->_model = glm::mat4(); //reset the matrix, or else it'll linger each frame and just multiply out of control lol
 }

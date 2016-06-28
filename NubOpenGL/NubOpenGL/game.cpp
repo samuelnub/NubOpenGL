@@ -31,11 +31,11 @@ Game::Game(GLFWwindow *windu)
 	Shader shades("shaders/colorsVert.glsl", "shaders/colorsFrag.glsl");
 	Shader lampo("shaders/lampVert.glsl", "shaders/lampFrag.glsl");
 
-	triangolo.bind(verts::triangle1, "textures/illuminati.png");
-	quaddo.bind(verts::quad1, "textures/cooldog.jpg", verts::quad1indices);
-	cuban.bind(verts::cube1, "textures/cromulon.png");
-	cubanlazy.bind(verts::cube1, "textures/cromulon.png");
-	cubanlamp.bind(verts::cube1, "textures/cooldog.jpg");
+	triangolo.bind(verts::triangle1, "textures/illuminati.png", "textures/illuminati.png");
+	quaddo.bind(verts::quad1, "textures/cooldog.jpg", "textures/cooldog.jpg", verts::quad1indices);
+	cuban.bind(verts::cube1, "textures/cromulon.png", "textures/cromulon.png");
+	cubanlazy.bind(verts::cube1, "textures/containerDiff.png", "textures/containerSpec.png");
+	cubanlamp.bind(verts::cube1, "textures/cooldog.jpg", "textures/illuminati.png");
 	cubanlamp.setupApproxPos(verts::cube1);
 
 	while (!glfwWindowShouldClose(windu))
@@ -82,9 +82,6 @@ Game::Game(GLFWwindow *windu)
 
 		//look who hasnt abstracted yet
 		//specific uniforms to send to ^shades, besides the usual mvp
-		GLint objectColorLoc = glGetUniformLocation(shades._program, "objectColor");
-		GLint matAmbientLoc = glGetUniformLocation(shades._program, "material.ambient");
-		GLint matDiffuseLoc = glGetUniformLocation(shades._program, "material.diffuse");
 		GLint matSpecularLoc = glGetUniformLocation(shades._program, "material.specular");
 		GLint matShineLoc = glGetUniformLocation(shades._program, "material.shininess");
 		GLint lightPosLoc = glGetUniformLocation(shades._program, "light.position");
@@ -92,14 +89,13 @@ Game::Game(GLFWwindow *windu)
 		GLint lightDiffuseLoc = glGetUniformLocation(shades._program, "light.diffuse");
 		GLint lightSpecularLoc = glGetUniformLocation(shades._program, "light.specular");
 		GLint viewPosLoc = glGetUniformLocation(shades._program, "viewPos");
-		glUniform3f(objectColorLoc, 1.0f, 0.5f, 0.2f);
-		glUniform3f(matAmbientLoc, verts::coolOrange.ambiR, verts::coolOrange.ambiG, verts::coolOrange.ambiB);
-		glUniform3f(matDiffuseLoc, verts::coolOrange.diffR, verts::coolOrange.diffG, verts::coolOrange.diffB);
-		glUniform3f(matSpecularLoc, verts::coolOrange.specR, verts::coolOrange.specG, verts::coolOrange.specB);
-		glUniform1f(matShineLoc, verts::coolOrange.shininess);
+		
+		glUniform1i(glGetUniformLocation(shades._program, "material.specular"), 1);
+		glUniform1f(matShineLoc, 64.0f);
+
 		glUniform3f(lightPosLoc, cubanlamp.getApproxPos().x, cubanlamp.getApproxPos().y, cubanlamp.getApproxPos().z);
 		glUniform3f(lightAmbientLoc, 0.2f, 0.2f, 0.2f);
-		glUniform3f(lightDiffuseLoc, 0.5f, 0.5f, 0.5f); // Let's darken the light a bit to fit the scene
+		glUniform3f(lightDiffuseLoc, 0.7f, 0.7f, 0.7f); // Let's darken the light a bit to fit the scene
 		glUniform3f(lightSpecularLoc, 1.0f, 1.0f, 1.0f);
 		glUniform3f(viewPosLoc, G::player.getPos().x, G::player.getPos().y, G::player.getPos().z);
 

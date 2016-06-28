@@ -59,12 +59,6 @@ namespace misc
 	const GLchar dummyGLchars[] = { '\0' };
 }
 
-
-typedef struct
-{
-	GLfloat x, y, z;
-	GLfloat nx, ny, nz; //TODO: used until normal mapping comes along
-	GLfloat ux, uy;
-}Vertex;
+//Vertex data type definition moved to mesh.h
 
 #endif

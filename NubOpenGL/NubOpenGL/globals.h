@@ -63,25 +63,8 @@ namespace misc
 typedef struct
 {
 	GLfloat x, y, z;
-	GLfloat nx, ny, nz; 
+	GLfloat nx, ny, nz; //TODO: used until normal mapping comes along
 	GLfloat ux, uy;
 }Vertex;
-
-typedef struct
-{
-	GLfloat ambiR, ambiG, ambiB;
-	GLfloat diffR, diffG, diffB;
-	GLfloat specR, specG, specB;
-	GLfloat shininess;
-}Material;
-
-typedef struct
-{
-	GLfloat posX, posY, posZ;
-	
-	GLfloat ambiR, ambiG, ambiB;
-	GLfloat diffR, diffG, diffB;
-	GLfloat specR, specG, specB;
-}Light;
 
 #endif

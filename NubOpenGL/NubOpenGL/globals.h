@@ -75,4 +75,13 @@ typedef struct
 	GLfloat shininess;
 }Material;
 
+typedef struct
+{
+	GLfloat posX, posY, posZ;
+	
+	GLfloat ambiR, ambiG, ambiB;
+	GLfloat diffR, diffG, diffB;
+	GLfloat specR, specG, specB;
+}Light;
+
 #endif

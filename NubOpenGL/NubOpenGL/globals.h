@@ -67,5 +67,12 @@ typedef struct
 	GLfloat ux, uy;
 }Vertex;
 
+typedef struct
+{
+	GLfloat ambiR, ambiG, ambiB;
+	GLfloat diffR, diffG, diffB;
+	GLfloat specR, specG, specB;
+	GLfloat shininess;
+}Material;
 
 #endif

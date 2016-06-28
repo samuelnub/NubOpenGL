@@ -30,8 +30,9 @@ private:
 	GLboolean _doEBO;
 	GLuint _EBOid;
 
-	GLboolean _doTex;
-	GLuint _texid;
+	GLuint _diffMap;
+	GLuint _specMap;
+	//GLuint _normMap;
 
 	glm::vec3 _approxPos;
 	glm::mat4 _model;
@@ -43,7 +44,7 @@ public:
 	~Render();
 
 	//if indexData.empty == 1, dont try to use ebo
-	void bind(const std::vector<Vertex> &vertData, const GLchar *texPath, const std::vector<GLushort> &indexData = misc::dummyVec);
+	void bind(const std::vector<Vertex> &vertData, const GLchar *diffPath, const GLchar *specPath, const std::vector<GLushort> &indexData = misc::dummyVec);
 
 	void translate(const glm::vec3 &newPos);
 	void scale(const glm::vec3 &newScale);

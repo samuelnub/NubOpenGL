@@ -2,8 +2,7 @@
 #ifndef VERTICESTEST_H
 #define VERTICESTEST_H
 
-#include "globals.h"
-#include <vector>
+#include "mesh.h"
 
 namespace verts
 {

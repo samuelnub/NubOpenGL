@@ -10,34 +10,34 @@ namespace verts
 	const std::vector<Vertex> triangle1 =
 	{
 		{-0.5f, -0.5f, 0.0f,
-		0.0f,  0.0f, -1.0f,
+		0.0f,  0.0f, 1.0f,
 		0.0f, 0.0f},
 
 		{0.5f, -0.5f, 0.0f,
-		0.0f,  0.0f, -1.0f,
+		0.0f,  0.0f, 1.0f,
 		1.0f, 0.0f},
 
 		{0.0f, 0.75f, 0.0f,
-		0.0f,  0.0f, -1.0f,
+		0.0f,  0.0f, 1.0f,
 		0.5f, 1.0f}
 	};
 
 	const std::vector<Vertex> quad1 =
 	{
 		{0.5f,  0.5f, 0.0f,
-		0.0f,  0.0f, -1.0f,
+		0.0f,  0.0f, 1.0f,
 		1.0f, 1.0f},
 
 		{0.5f, -0.5f, 0.0f,
-		0.0f,  0.0f, -1.0f,
+		0.0f,  0.0f, 1.0f,
 		1.0f, 0.0f},
 
 		{-0.5f, -0.5f, 0.0f,
-		0.0f,  0.0f, -1.0f,
+		0.0f,  0.0f, 1.0f,
 		0.0f, 0.0f},
 
 		{-0.5f,  0.5f, 0.0f,
-		0.0f,  0.0f, -1.0f,
+		0.0f,  0.0f, 1.0f,
 		0.0f, 1.0f}
 	};
 	const std::vector<GLushort> quad1indices =

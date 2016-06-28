@@ -16,7 +16,7 @@ Render::~Render()
 }
 
 
-void Render::bind(const std::vector<Vertex> &vertData, const GLchar *texPath, const std::vector<GLushort> &indexData)
+void Render::bind(const std::vector<Vertex>& vertData, const GLchar * diffPath, const GLchar * specPath, const std::vector<GLushort>& indexData)
 {
 	this->_doEBO = (indexData.empty()) ? GL_FALSE : GL_TRUE;
 	this->_VBOsize = vertData.size();
@@ -69,9 +69,9 @@ void Render::bind(const std::vector<Vertex> &vertData, const GLchar *texPath, co
 	glBindVertexArray(0); //ps, do not unbind ebo like this, dont unbind it at all, keep it bound to this vao
 
 
-	//load and bind texture
-	glGenTextures(1, &this->_texid);
-	glBindTexture(GL_TEXTURE_2D, this->_texid);
+	//load and bind diffuse map
+	glGenTextures(1, &this->_diffMap);
+	glBindTexture(GL_TEXTURE_2D, this->_diffMap);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
@@ -81,10 +81,28 @@ void Render::bind(const std::vector<Vertex> &vertData, const GLchar *texPath, co
 
 
 	int width, height;
-	unsigned char *img = SOIL_load_image(texPath, &width, &height, 0, SOIL_LOAD_RGBA);
+	unsigned char *img = SOIL_load_image(diffPath, &width, &height, 0, SOIL_LOAD_RGBA);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, img);
 	glGenerateMipmap(GL_TEXTURE_2D);
 	SOIL_free_image_data(img);
+
+	//load and bind specular map, if you're too inept, just give me the diff map or anything lol
+	glGenTextures(1, &this->_specMap);
+	glBindTexture(GL_TEXTURE_2D, this->_specMap);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+	
+	img = SOIL_load_image(specPath, &width, &height, 0, SOIL_LOAD_RGBA);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, img);
+	glGenerateMipmap(GL_TEXTURE_2D);
+	SOIL_free_image_data(img);
+
+
 	glBindTexture(GL_TEXTURE_2D, 0); //unbind tex when done
 }
 
@@ -209,7 +227,10 @@ void Render::resetModel()
 void Render::drawVBO()
 {
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, this->_texid);
+	glBindTexture(GL_TEXTURE_2D, this->_diffMap);
+
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, this->_specMap);
 
 	glBindVertexArray(_VAOid);
 
@@ -219,8 +240,11 @@ void Render::drawVBO()
 
 void Render::drawEBO()
 {
-	glActiveTexture(GL_TEXTURE0); //no texture units/multitexturing yet ;(( too lazy
-	glBindTexture(GL_TEXTURE_2D, this->_texid);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, this->_diffMap);
+
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, this->_specMap);
 
 	glBindVertexArray(_VAOid);
 

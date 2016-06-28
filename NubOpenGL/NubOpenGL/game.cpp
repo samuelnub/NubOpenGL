@@ -60,7 +60,7 @@ Game::Game(GLFWwindow *windu)
 		//the lamp shader also needs to know the view and proj matrices, although our "camera" is using the shades shader! tldr just send the mvp to every shader (if it supports it)
 
 		cubanlamp.rotate((GLfloat)glfwGetTime() * 20.0f, glm::vec3(0.7f, 0.2f, 0.8f));
-		cubanlamp.setApproxPos();
+		//cubanlamp.setApproxPos();
 
 		cubanlamp.translate(glm::vec3(1.0f, 0.4f, 8.0f));
 		cubanlamp.setApproxPos();

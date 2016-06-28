@@ -103,19 +103,62 @@ void Render::rotate(const GLfloat &newDeg, const glm::vec3 &newAxis)
 	this->_model = glm::rotate(this->_model, glm::radians(newDeg), newAxis);
 }
 
-glm::vec3 Render::getPos()
+void Render::setupApproxPos(const std::vector<Vertex> &vertData)
 {
-	glm::vec3 tempPos;
-	tempPos.x = this->_model[0][0] / this->_model[3][3];
-	tempPos.y = this->_model[1][1] / this->_model[3][3];
-	tempPos.z = this->_model[2][2] / this->_model[3][3];
+	//a very taxing func that should not be used, y'hear me, done once
+	GLfloat maxX = 0.0f;
+	GLfloat maxY = 0.0f;
+	GLfloat maxZ = 0.0f;
 
-	return glm::vec3(tempPos);
+	for (int i = 0; i < vertData.size(); i++)
+	{
+		if (vertData.at(i).x > maxX)
+			maxX = vertData.at(i).x;
+		if (vertData.at(i).y > maxY)
+			maxY = vertData.at(i).y;
+		if (vertData.at(i).z > maxZ)
+			maxZ = vertData.at(i).z;
+	}
+
+	GLfloat minX = maxX;
+	GLfloat minY = maxY;
+	GLfloat minZ = maxZ;
+
+	for (int i = 0; i < vertData.size(); i++)
+	{
+		if (vertData.at(i).x < minX)
+			minX = vertData.at(i).x;
+		if (vertData.at(i).y < minY)
+			minY = vertData.at(i).y;
+		if (vertData.at(i).z < minZ)
+			minZ = vertData.at(i).z;
+	}
+	
+	this->_approxPos.x = maxX - minX;
+	this->_approxPos.y = maxY - minY;
+	this->_approxPos.z = maxZ - minZ;
+}
+
+void Render::setApproxPos()
+{
+	glm::vec4 tempPos = this->_model * glm::vec4((this->_approxPos), (1.0f));
+
+	this->_approxPos = glm::vec3((tempPos.x), (tempPos.y), (tempPos.z));
+}
+
+glm::vec3 Render::getApproxPos()
+{
+	return glm::vec3(this->_approxPos);
 }
 
 glm::mat4 Render::getModel()
 {
 	return this->_model;
+}
+
+void Render::resetApproxPos()
+{
+	this->_approxPos = glm::vec3();
 }
 
 void Render::resetModel()

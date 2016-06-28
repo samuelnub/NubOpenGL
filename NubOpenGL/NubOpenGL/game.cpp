@@ -37,6 +37,7 @@ Game::Game(GLFWwindow *windu)
 	cuban.bind(verts::cube1, "textures/cromulon.png");
 	cubanlazy.bind(verts::cube1, "textures/cromulon.png");
 	cubanlamp.bind(verts::cube1, "textures/cooldog.jpg");
+	cubanlamp.setupApproxPos(verts::cube1);
 
 	while (!glfwWindowShouldClose(windu))
 	{
@@ -59,10 +60,11 @@ Game::Game(GLFWwindow *windu)
 		projLoc = glGetUniformLocation(lampo._program, "projection");
 		//the lamp shader also needs to know the view and proj matrices, although our "camera" is using the shades shader! tldr just send the mvp to every shader (if it supports it)
 
-		//cubanlamp.rotate((GLfloat)glfwGetTime() * 40.0f, glm::vec3(0.7f, 0.2f, 0.8f));
-		cubanlamp.translate(glm::vec3(1.0f, 0.4f, 4.0f));
+		cubanlamp.rotate((GLfloat)glfwGetTime() * 40.0f, glm::vec3(0.7f, 0.2f, 0.8f));
+		cubanlamp.setApproxPos();
 
-		std::cout << cubanlamp.getPos().x << " " << cubanlamp.getPos().y << " " << cubanlamp.getPos().z << "\n";
+		cubanlamp.translate(glm::vec3(1.0f, 0.4f, 8.0f));
+		cubanlamp.setApproxPos();
 
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(cubanlamp.getModel()));
 		cubanlamp.drawVBO();
@@ -86,9 +88,10 @@ Game::Game(GLFWwindow *windu)
 		GLint viewPosLoc = glGetUniformLocation(shades._program, "viewPos");
 		glUniform3f(objectColorLoc, 0.8f, 0.5f, 0.7f);
 		glUniform3f(lightColorLoc, 1.0f, 1.0f, 1.0f);
-		glUniform3f(lightPosLoc, cubanlamp.getPos().x, cubanlamp.getPos().y, cubanlamp.getPos().z);
+		glUniform3f(lightPosLoc, cubanlamp.getApproxPos().x, cubanlamp.getApproxPos().y, cubanlamp.getApproxPos().z);
 		glUniform3f(viewPosLoc, G::player.getPos().x, G::player.getPos().y, G::player.getPos().z);
 
+		std::cout << cubanlamp.getApproxPos().x << " " << cubanlamp.getApproxPos().y << " " << cubanlamp.getApproxPos().z << "\n";
 
 		modelLoc = glGetUniformLocation(shades._program, "model");
 		viewLoc = glGetUniformLocation(shades._program, "view");
@@ -132,6 +135,7 @@ Game::Game(GLFWwindow *windu)
 		cuban.resetModel();
 		cubanlazy.resetModel();
 		cubanlamp.resetModel();
+		cubanlamp.resetApproxPos();
 
 		G::player.resetView();
 		G::player.resetProj();

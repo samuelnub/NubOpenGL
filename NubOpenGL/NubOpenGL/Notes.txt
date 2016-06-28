@@ -41,6 +41,9 @@
 	phong shading already worked, but now moving light sources work too since i can get their approx position based on the transformations applied to it
 	wondered why the pos was stuck at 0, then i realised my w multiplier was set to 0.0f, nice one najibian foogol
 
+	created definitions of material and light, both having amb, diff and spec
+
+
 28
 
 TODO:

@@ -47,12 +47,14 @@
 	
 	tried out "point lights" which decay in brightness over distance, cool, but could use more paprika
 
+	depreciated Render class in favor of mesh class and future model class
+
 
 TODO:
 	implement proper input class instead of being a procrastinating dumbo and having it clogging the main game cpp
-	add multitexturing support
 	normal maps instead of per-face normals
 	multiple light sources
 	clean up the process of passing uniform vars around
 	shadow casting
 	model loading
+	mesh.h should have some of the funcs render.h had, getting centre pos etc.

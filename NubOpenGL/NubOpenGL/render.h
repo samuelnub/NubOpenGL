@@ -33,6 +33,7 @@ private:
 	GLboolean _doTex;
 	GLuint _texid;
 
+	glm::vec3 _approxPos;
 	glm::mat4 _model;
 
 	GLsizei _VBOsize;
@@ -48,9 +49,12 @@ public:
 	void scale(const glm::vec3 &newScale);
 	void rotate(const GLfloat &newDeg, const glm::vec3 &newAxis);
 
-	glm::vec3 getPos();
+	void setupApproxPos(const std::vector<Vertex> &vertData);
+	void setApproxPos();
+	glm::vec3 getApproxPos();
 	glm::mat4 getModel();
 
+	void resetApproxPos();
 	void resetModel();
 
 	void drawVBO();

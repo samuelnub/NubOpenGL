@@ -87,15 +87,25 @@ Game::Game(GLFWwindow *windu)
 		GLint lightAmbientLoc = glGetUniformLocation(shades._program, "light.ambient");
 		GLint lightDiffuseLoc = glGetUniformLocation(shades._program, "light.diffuse");
 		GLint lightSpecularLoc = glGetUniformLocation(shades._program, "light.specular");
+
 		GLint viewPosLoc = glGetUniformLocation(shades._program, "viewPos");
 		
+		//these two can be put outside the loop, unless you wanna update it during loop
+		//send which texture is diff and which is spec
+		glUniform1i(glGetUniformLocation(shades._program, "material.diffuse"), 0);
 		glUniform1i(glGetUniformLocation(shades._program, "material.specular"), 1);
+
 		glUniform1f(matShineLoc, 64.0f);
+
+		glUniform1f(glGetUniformLocation(shades._program, "light.constant"), 0.5f);
+		glUniform1f(glGetUniformLocation(shades._program, "light.linear"), 0.02);
+		glUniform1f(glGetUniformLocation(shades._program, "light.quadratic"), 0.022);
 
 		glUniform3f(lightPosLoc, cubanlamp.getApproxPos().x, cubanlamp.getApproxPos().y, cubanlamp.getApproxPos().z);
 		glUniform3f(lightAmbientLoc, 0.2f, 0.2f, 0.2f);
 		glUniform3f(lightDiffuseLoc, 0.7f, 0.7f, 0.7f); // Let's darken the light a bit to fit the scene
 		glUniform3f(lightSpecularLoc, 1.0f, 1.0f, 1.0f);
+
 		glUniform3f(viewPosLoc, G::player.getPos().x, G::player.getPos().y, G::player.getPos().z);
 
 		modelLoc = glGetUniformLocation(shades._program, "model");

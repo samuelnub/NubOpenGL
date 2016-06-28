@@ -7,6 +7,14 @@
 
 namespace verts
 {
+	const Material coolOrange =
+	{
+		1.0f, 0.5f, 0.31f,
+		1.0f, 0.5f, 0.31f,
+		0.5f, 0.5f, 0.5f,
+		32.0f
+	};
+
 	const std::vector<Vertex> triangle1 =
 	{
 		{-0.5f, -0.5f, 0.0f,

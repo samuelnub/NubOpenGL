@@ -36,6 +36,13 @@
 	got phong shading to work with ambient, diffuse and specular highlights
 	still to dumb to be able to extract model position from its model matrix
 
+28 June 2016
+	thats cause you cant, idiot, needs to find center (or approx) of geometry, easiest method was just finding the middle of the min bounding box
+	phong shading already worked, but now moving light sources work too since i can get their approx position based on the transformations applied to it
+	wondered why the pos was stuck at 0, then i realised my w multiplier was set to 0.0f, nice one najibian foogol
+
+28
+
 TODO:
 	implement normals in the Vertex struct in globals.h
 	implement proper input class instead of being a procrastinating dumbo and having it clogging the main game cpp

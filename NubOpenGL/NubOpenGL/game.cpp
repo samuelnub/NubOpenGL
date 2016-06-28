@@ -27,7 +27,6 @@ Game::Game(GLFWwindow *windu)
 	Render cuban;
 	Render cubanlazy;
 	Render cubanlamp;
-	glm::vec3 cubanlampPos;
 
 	Shader shades("shaders/colorsVert.glsl", "shaders/colorsFrag.glsl");
 	Shader lampo("shaders/lampVert.glsl", "shaders/lampFrag.glsl");
@@ -60,7 +59,7 @@ Game::Game(GLFWwindow *windu)
 		projLoc = glGetUniformLocation(lampo._program, "projection");
 		//the lamp shader also needs to know the view and proj matrices, although our "camera" is using the shades shader! tldr just send the mvp to every shader (if it supports it)
 
-		cubanlamp.rotate((GLfloat)glfwGetTime() * 40.0f, glm::vec3(0.7f, 0.2f, 0.8f));
+		cubanlamp.rotate((GLfloat)glfwGetTime() * 20.0f, glm::vec3(0.7f, 0.2f, 0.8f));
 		cubanlamp.setApproxPos();
 
 		cubanlamp.translate(glm::vec3(1.0f, 0.4f, 8.0f));
@@ -75,23 +74,34 @@ Game::Game(GLFWwindow *windu)
 		glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(G::player.getProj()));
 
 
-
+		std::cout << cubanlamp.getApproxPos().x << " " << cubanlamp.getApproxPos().y << " " << cubanlamp.getApproxPos().z << "\n";
 
 
 		//use shades , btw, doesnt accept textures atm
 		shades.use();
 
+		//look who hasnt abstracted yet
 		//specific uniforms to send to ^shades, besides the usual mvp
 		GLint objectColorLoc = glGetUniformLocation(shades._program, "objectColor");
-		GLint lightColorLoc = glGetUniformLocation(shades._program, "lightColor");
-		GLint lightPosLoc = glGetUniformLocation(shades._program, "lightPos");
+		GLint matAmbientLoc = glGetUniformLocation(shades._program, "material.ambient");
+		GLint matDiffuseLoc = glGetUniformLocation(shades._program, "material.diffuse");
+		GLint matSpecularLoc = glGetUniformLocation(shades._program, "material.specular");
+		GLint matShineLoc = glGetUniformLocation(shades._program, "material.shininess");
+		GLint lightPosLoc = glGetUniformLocation(shades._program, "light.position");
+		GLint lightAmbientLoc = glGetUniformLocation(shades._program, "light.ambient");
+		GLint lightDiffuseLoc = glGetUniformLocation(shades._program, "light.diffuse");
+		GLint lightSpecularLoc = glGetUniformLocation(shades._program, "light.specular");
 		GLint viewPosLoc = glGetUniformLocation(shades._program, "viewPos");
-		glUniform3f(objectColorLoc, 0.8f, 0.5f, 0.7f);
-		glUniform3f(lightColorLoc, 1.0f, 1.0f, 1.0f);
+		glUniform3f(objectColorLoc, 1.0f, 0.5f, 0.2f);
+		glUniform3f(matAmbientLoc, verts::coolOrange.ambiR, verts::coolOrange.ambiG, verts::coolOrange.ambiB);
+		glUniform3f(matDiffuseLoc, verts::coolOrange.diffR, verts::coolOrange.diffG, verts::coolOrange.diffB);
+		glUniform3f(matSpecularLoc, verts::coolOrange.specR, verts::coolOrange.specG, verts::coolOrange.specB);
+		glUniform1f(matShineLoc, verts::coolOrange.shininess);
 		glUniform3f(lightPosLoc, cubanlamp.getApproxPos().x, cubanlamp.getApproxPos().y, cubanlamp.getApproxPos().z);
+		glUniform3f(lightAmbientLoc, 0.2f, 0.2f, 0.2f);
+		glUniform3f(lightDiffuseLoc, 0.5f, 0.5f, 0.5f); // Let's darken the light a bit to fit the scene
+		glUniform3f(lightSpecularLoc, 1.0f, 1.0f, 1.0f);
 		glUniform3f(viewPosLoc, G::player.getPos().x, G::player.getPos().y, G::player.getPos().z);
-
-		std::cout << cubanlamp.getApproxPos().x << " " << cubanlamp.getApproxPos().y << " " << cubanlamp.getApproxPos().z << "\n";
 
 		modelLoc = glGetUniformLocation(shades._program, "model");
 		viewLoc = glGetUniformLocation(shades._program, "view");

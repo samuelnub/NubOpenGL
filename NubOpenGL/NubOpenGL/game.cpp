@@ -76,8 +76,7 @@ Game::Game(GLFWwindow *windu)
 
 		std::cout << cubanlamp.getApproxPos().x << " " << cubanlamp.getApproxPos().y << " " << cubanlamp.getApproxPos().z << "\n";
 
-
-		//use shades , btw, doesnt accept textures atm
+		//use shades shaders
 		shades.use();
 
 		//look who hasnt abstracted yet

@@ -43,11 +43,16 @@
 
 	created definitions of material and light, both having amb, diff and spec
 
+	made diffuse and specular based on given diffuse and specular maps aka textures, render's bind func needs extra param for specular maps now, and eventually normal maps etc
+	
+	tried out "point lights" which decay in brightness over distance, cool, but could use more paprika
 
-28
 
 TODO:
-	implement normals in the Vertex struct in globals.h
 	implement proper input class instead of being a procrastinating dumbo and having it clogging the main game cpp
 	add multitexturing support
-	fix up player WASD movement and stuttering
+	normal maps instead of per-face normals
+	multiple light sources
+	clean up the process of passing uniform vars around
+	shadow casting
+	model loading

@@ -8,7 +8,7 @@
 
 #include "game.h"
 #include "globals.h"
-#include "render.h"
+#include "model.h"
 #include "shader.h"
 #include <iostream>
 
@@ -22,21 +22,11 @@ Game::Game(GLFWwindow *windu)
 
 	G::player.spawn(glm::vec3((gamesettings::SPAWNX),(gamesettings::SPAWNY),(gamesettings::SPAWNZ)));
 
-	Render triangolo;
-	Render quaddo;
-	Render cuban;
-	Render cubanlazy;
-	Render cubanlamp;
 
-	Shader shades("shaders/colorsVert.glsl", "shaders/colorsFrag.glsl");
-	Shader lampo("shaders/lampVert.glsl", "shaders/lampFrag.glsl");
+	Shader shades("shaders/simpleVert.glsl", "shaders/simpleFrag.glsl");
 
-	triangolo.bind(verts::triangle1, "textures/illuminati.png", "textures/illuminati.png");
-	quaddo.bind(verts::quad1, "textures/cooldog.jpg", "textures/cooldog.jpg", verts::quad1indices);
-	cuban.bind(verts::cube1, "textures/cromulon.png", "textures/cromulon.png");
-	cubanlazy.bind(verts::cube1, "textures/containerDiff.png", "textures/containerSpec.png");
-	cubanlamp.bind(verts::cube1, "textures/cooldog.jpg", "textures/illuminati.png");
-	cubanlamp.setupApproxPos(verts::cube1);
+	Model nanoguy("models/nanosuit/nanosuit.obj");
+	Model cuban("models/cube/cube.obj");
 
 	while (!glfwWindowShouldClose(windu))
 	{
@@ -45,112 +35,27 @@ Game::Game(GLFWwindow *windu)
 		glfwPollEvents();
 		G::player.processKeyboard(Input::_keys, Input::_deltaTime);
 
-		glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+		glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-		GLint modelLoc, viewLoc, projLoc;
-
-
-		//use lamp shader
-		lampo.use();
-
-		modelLoc = glGetUniformLocation(lampo._program, "model");
-		viewLoc = glGetUniformLocation(lampo._program, "view");
-		projLoc = glGetUniformLocation(lampo._program, "projection");
-		//the lamp shader also needs to know the view and proj matrices, although our "camera" is using the shades shader! tldr just send the mvp to every shader (if it supports it)
-
-		cubanlamp.rotate((GLfloat)glfwGetTime() * 20.0f, glm::vec3(0.7f, 0.2f, 0.8f));
-		//cubanlamp.setApproxPos();
-
-		cubanlamp.translate(glm::vec3(1.0f, 0.4f, 8.0f));
-		cubanlamp.setApproxPos();
-
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(cubanlamp.getModel()));
-		cubanlamp.drawVBO();
-
-		G::player.setMatrices(); //"translate" the player
-
-		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(G::player.getView()));
-		glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(G::player.getProj()));
-
-
-		std::cout << cubanlamp.getApproxPos().x << " " << cubanlamp.getApproxPos().y << " " << cubanlamp.getApproxPos().z << "\n";
 
 		//use shades shaders
 		shades.use();
 
-		//look who hasnt abstracted yet
-		//specific uniforms to send to ^shades, besides the usual mvp
-		GLint matSpecularLoc = glGetUniformLocation(shades._program, "material.specular");
-		GLint matShineLoc = glGetUniformLocation(shades._program, "material.shininess");
-		GLint lightPosLoc = glGetUniformLocation(shades._program, "light.position");
-		GLint lightAmbientLoc = glGetUniformLocation(shades._program, "light.ambient");
-		GLint lightDiffuseLoc = glGetUniformLocation(shades._program, "light.diffuse");
-		GLint lightSpecularLoc = glGetUniformLocation(shades._program, "light.specular");
+		G::player.setMatrices();
 
-		GLint viewPosLoc = glGetUniformLocation(shades._program, "viewPos");
-		
-		//these two can be put outside the loop, unless you wanna update it during loop
-		//send which texture is diff and which is spec
-		glUniform1i(glGetUniformLocation(shades._program, "material.diffuse"), 0);
-		glUniform1i(glGetUniformLocation(shades._program, "material.specular"), 1);
+		glUniformMatrix4fv(glGetUniformLocation(shades._program, "view"), 1, GL_FALSE, glm::value_ptr(G::player.getView()));
+		glUniformMatrix4fv(glGetUniformLocation(shades._program, "projection"), 1, GL_FALSE, glm::value_ptr(G::player.getProj()));
 
-		glUniform1f(matShineLoc, 64.0f);
-
-		glUniform1f(glGetUniformLocation(shades._program, "light.constant"), 0.5f);
-		glUniform1f(glGetUniformLocation(shades._program, "light.linear"), 0.02);
-		glUniform1f(glGetUniformLocation(shades._program, "light.quadratic"), 0.022);
-
-		glUniform3f(lightPosLoc, cubanlamp.getApproxPos().x, cubanlamp.getApproxPos().y, cubanlamp.getApproxPos().z);
-		glUniform3f(lightAmbientLoc, 0.2f, 0.2f, 0.2f);
-		glUniform3f(lightDiffuseLoc, 0.7f, 0.7f, 0.7f); // Let's darken the light a bit to fit the scene
-		glUniform3f(lightSpecularLoc, 1.0f, 1.0f, 1.0f);
-
-		glUniform3f(viewPosLoc, G::player.getPos().x, G::player.getPos().y, G::player.getPos().z);
-
-		modelLoc = glGetUniformLocation(shades._program, "model");
-		viewLoc = glGetUniformLocation(shades._program, "view");
-		projLoc = glGetUniformLocation(shades._program, "projection");
-
-		cuban.rotate((GLfloat)glfwGetTime() * 30.0f, glm::vec3(0.8f, 0.0f, 3.0f));
-		cuban.translate(glm::vec3(0.1f, 0.2f, -5.0f));
-
-		cubanlazy.translate(glm::vec3(1.0f, 2.0f, 2.5f));
-
-		triangolo.translate(glm::vec3(1.0f, 4.0f, 0.2f));
-		triangolo.rotate((GLfloat)glfwGetTime() * -80.0f, glm::vec3(0.0f, 0.0f, 1.0f));
-
-		quaddo.rotate((GLfloat)glfwGetTime() * 50.0f, glm::vec3(0.5f, 0.0f, 0.2f));
-		quaddo.translate(glm::vec3(0.4f, 0.0f, 0.0f));
-
-
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(triangolo.getModel()));
-		triangolo.drawVBO();
-
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(quaddo.getModel()));
-		quaddo.drawEBO();
-
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(cubanlazy.getModel()));
-		cubanlazy.drawVBO();
-
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(cuban.getModel()));
-		cuban.drawVBO();
-
-		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(G::player.getView()));
-		glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(G::player.getProj()));
+		glm::mat4 model;
+		model = glm::rotate(model, glm::radians((GLfloat)glfwGetTime() * 30.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::translate(model, glm::vec3(0.0f, -1.75f, 0.0f));
+		model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
+		glUniformMatrix4fv(glGetUniformLocation(shades._program, "model"), 1, GL_FALSE, glm::value_ptr(model));
 
 
 
-
-
-
-		//reset all these gosh darn matrices
-		triangolo.resetModel();
-		quaddo.resetModel();
-		cuban.resetModel();
-		cubanlazy.resetModel();
-		cubanlamp.resetModel();
-		cubanlamp.resetApproxPos();
+		cuban.draw(shades);
+		nanoguy.draw(shades);
 
 		G::player.resetView();
 		G::player.resetProj();

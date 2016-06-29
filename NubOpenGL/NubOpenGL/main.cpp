@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include "graphics.h"
+#include "globals.h"
 
 int main()
 {
@@ -10,6 +11,6 @@ int main()
 
 	Graphics giraffe;
 
-    return 0;
+    return SUCC;
 }
 

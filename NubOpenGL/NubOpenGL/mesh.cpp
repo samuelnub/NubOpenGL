@@ -1,8 +1,9 @@
 #include "mesh.h"
 
+#include <fstream>
 #include <sstream>
 
-Mesh::Mesh(std::vector<Vertex>& vertData, std::vector<GLushort>& indexData, std::vector<Texture>& texData)
+Mesh::Mesh(std::vector<Vertex>& vertData, std::vector<GLuint>& indexData, std::vector<Texture>& texData)
 {
 	this->_vertices = vertData;
 	this->_indices = indexData;
@@ -31,13 +32,19 @@ void Mesh::draw(Shader & shader)
 			ss << specularN++;
 		number = ss.str();
 		
-		glUniform1f(glGetUniformLocation(shader._program, ("material." + name + number).c_str()), i);
+		glUniform1f(glGetUniformLocation(shader._program, (name + number).c_str()), i);
 		glBindTexture(GL_TEXTURE_2D, this->_textures[i].id);
 	}
 
 	glBindVertexArray(this->_vaoID);
-	glDrawElements(GL_TRIANGLES, this->_indices.size(), GL_UNSIGNED_SHORT, 0);
+	glDrawElements(GL_TRIANGLES, this->_indices.size(), GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
+
+	for (GLuint i = 0; i < this->_textures.size(); i++)
+	{
+		glActiveTexture(GL_TEXTURE0 + i);
+		glBindTexture(GL_TEXTURE_2D, 0);
+	}
 }
 
 void Mesh::setupMesh()
@@ -53,6 +60,13 @@ void Mesh::setupMesh()
 		GL_ARRAY_BUFFER,
 		this->_vertices.size() * sizeof(Vertex),
 		&this->_vertices[0],
+		GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->_eboID);
+	glBufferData(
+		GL_ELEMENT_ARRAY_BUFFER,
+		this->_indices.size() * sizeof(GLuint),
+		&this->_indices[0], //SPENT 3 HOURS WONDERING WHY THIS DIDNT WORK, GAVE IT VERTICES INSTEAD OF INDICES
 		GL_STATIC_DRAW);
 
 	glEnableVertexAttribArray(0);
@@ -81,13 +95,6 @@ void Mesh::setupMesh()
 		GL_FALSE,
 		sizeof(Vertex),
 		(GLvoid*)offsetof(Vertex, uv));
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->_eboID);
-	glBufferData(
-		GL_ELEMENT_ARRAY_BUFFER,
-		this->_indices.size() * sizeof(GLushort),
-		&this->_vertices[0],
-		GL_STATIC_DRAW);
 
 	glBindVertexArray(0);
 }

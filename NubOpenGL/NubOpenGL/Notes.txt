@@ -49,6 +49,11 @@
 
 	depreciated Render class in favor of mesh class and future model class
 
+29 June 2016
+	implemented functional mesh and model class
+	assimp-vc130-mt.dll needed in working dir, needs similarly named .lib in linker, and includes obviously, y'noomba
+	removed redundant test vertices, test shaders, render.h and cpp
+	using old simpleVert and simpleFrag shaders for now, updated to suit simple needs, will shift back to proper lighting shaders eventually i think...
 
 TODO:
 	implement proper input class instead of being a procrastinating dumbo and having it clogging the main game cpp
@@ -56,5 +61,4 @@ TODO:
 	multiple light sources
 	clean up the process of passing uniform vars around
 	shadow casting
-	model loading
 	mesh.h should have some of the funcs render.h had, getting centre pos etc.

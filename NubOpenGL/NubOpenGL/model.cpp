@@ -10,10 +10,14 @@ Model::Model(GLchar *path)
 
 void Model::draw(Shader &shader)
 {
+	glUniformMatrix4fv(glGetUniformLocation(shader._program, "model"), 1, GL_FALSE, glm::value_ptr(this->_modelMat));
+
 	for (GLuint i = 0; i < this->_meshes.size(); i++)
 	{
 		this->_meshes[i].draw(shader);
 	}
+
+	this->_modelMat = glm::mat4();
 }
 
 void Model::loadModel(std::string path)
@@ -157,10 +161,10 @@ GLuint Model::textureFromFile(const char * path, std::string directory)
 
 	int width;
 	int height;
-	unsigned char *img = SOIL_load_image(filename.c_str(), &width, &height, 0, SOIL_LOAD_RGB);
+	unsigned char *img = SOIL_load_image(filename.c_str(), &width, &height, 0, SOIL_LOAD_RGBA);
 
 	glBindTexture(GL_TEXTURE_2D, texID);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, img);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, img);
 	glGenerateMipmap(GL_TEXTURE_2D);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -171,4 +175,102 @@ GLuint Model::textureFromFile(const char * path, std::string directory)
 	SOIL_free_image_data(img);
 
 	return texID;
+}
+
+void Model::calcApproxPos()
+{
+	GLfloat maxX = 0.0f;
+	GLfloat maxY = 0.0f;
+	GLfloat maxZ = 0.0f;
+
+	for (GLuint i = 0; i < this->_meshes.size(); i++)
+	{
+		for (GLuint j = 0; j < this->_meshes[i]._vertices.size(); j++)
+		{
+			if (this->_meshes[i]._vertices[j].pos.x > maxX)
+				maxX = this->_meshes[i]._vertices[j].pos.x;
+			if (this->_meshes[i]._vertices[j].pos.y > maxY)
+				maxY = this->_meshes[i]._vertices[j].pos.y;
+			if (this->_meshes[i]._vertices[j].pos.z > maxZ)
+				maxZ = this->_meshes[i]._vertices[j].pos.z;
+		}
+	}
+
+	GLfloat minX = maxX;
+	GLfloat minY = maxY;
+	GLfloat minZ = maxZ;
+
+	for (GLuint i = 0; i < this->_meshes.size(); i++)
+	{
+		for (GLuint j = 0; j < this->_meshes[i]._vertices.size(); j++)
+		{
+			if (this->_meshes[i]._vertices[j].pos.x < minX)
+				minX = this->_meshes[i]._vertices[j].pos.x;
+			if (this->_meshes[i]._vertices[j].pos.y < minY)
+				minY = this->_meshes[i]._vertices[j].pos.y;
+			if (this->_meshes[i]._vertices[j].pos.z < minZ)
+				minZ = this->_meshes[i]._vertices[j].pos.z;
+		}
+	}
+
+	this->_approxPos.x = maxX - minX;
+	this->_approxPos.y = maxY - minY;
+	this->_approxPos.z = maxZ - minZ;
+}
+
+glm::vec3 Model::getApproxPos()
+{
+	return this->_approxPos;
+}
+
+void Model::translate(glm::vec3 & translation)
+{
+	this->_modelMat = glm::translate(this->_modelMat, translation);
+}
+
+void Model::scale(glm::vec3 & scale)
+{
+	this->_modelMat = glm::scale(this->_modelMat, scale);
+}
+
+void Model::rotate(GLfloat & degrees, glm::vec3 & axis)
+{
+	this->_modelMat = glm::rotate(this->_modelMat, glm::radians(degrees), axis);
+}
+
+void Model::sendUniforms(Shader &shader)
+{
+	if (!this->_uniformVec3.empty())
+	{
+		std::map<const GLchar *, glm::vec3>::const_iterator iter;
+		iter = this->_uniformVec3.begin();
+
+		while (iter != _uniformVec3.end())
+		{
+			glUniform3f(glGetUniformLocation(shader._program, iter->first), iter->second.x, iter->second.y, iter->second.z);
+		}
+	}
+
+	if (!this->_uniformMat4.empty())
+	{
+		std::map<const GLchar *, glm::mat4>::const_iterator iter;
+		iter = this->_uniformMat4.begin();
+
+		while (iter != _uniformMat4.end())
+		{
+			glUniformMatrix4fv(glGetUniformLocation(shader._program, iter->first), 1, GL_FALSE, glm::value_ptr(iter->second));
+		}
+	}
+
+	if (!this->_uniformFloat.empty())
+	{
+		std::map<const GLchar *, GLfloat>::const_iterator iter;
+		iter = this->_uniformFloat.begin();
+
+		while (iter != _uniformFloat.end())
+		{
+			glUniform1f(shader._program, iter->second), iter->first);
+			//swapped around cause iterator chose the glfloats to be the iterating key
+		}
+	}
 }

@@ -269,7 +269,7 @@ void Model::sendUniforms(Shader &shader)
 
 		while (iter != _uniformFloat.end())
 		{
-			glUniform1f(shader._program, iter->second), iter->first);
+			glUniform1f(glGetUniformLocation(shader._program, iter->second), iter->first);
 			//swapped around cause iterator chose the glfloats to be the iterating key
 		}
 	}

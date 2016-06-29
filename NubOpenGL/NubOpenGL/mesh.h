@@ -12,6 +12,7 @@
 
 #include <GLFW\glfw3.h>
 
+#include "shader.h"
 #include <iostream>
 #include <string>
 #include <vector>
@@ -20,39 +21,39 @@
 #include <glm\gtc\matrix_transform.hpp>
 #include <glm\gtc\type_ptr.hpp>
 
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
+
 typedef struct
 {
 	glm::vec3 pos;
 	glm::vec3 norm;
-	glm::vec3 uv;
+	glm::vec2 uv;
 }Vertex;
 
 typedef struct
 {
 	GLuint id;
 	std::string type;
+	aiString path;
 }Texture;
-
-class Shader
-{
-public:
-	GLuint _program;
-};
 
 class Mesh
 {
 private:
-	GLuint _vaoID;
+	//GLuint _vaoID;
 	GLuint _vboID;
 	GLuint _eboID;
 
 public:
 	//lord forgive me for having public member variables
+	GLuint _vaoID;
 	std::vector<Vertex> _vertices;
-	std::vector<GLushort> _indices;
+	std::vector<GLuint> _indices;
 	std::vector<Texture> _textures;
 
-	Mesh(std::vector<Vertex> &vertData, std::vector<GLushort> &indexData, std::vector<Texture> &texData);
+	Mesh(std::vector<Vertex> &vertData, std::vector<GLuint> &indexData, std::vector<Texture> &texData);
 
 	void draw(Shader &shader);
 

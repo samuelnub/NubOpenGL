@@ -32,13 +32,17 @@ public:
 	static GLuint textureFromFile(const char *path, std::string directory);
 
 	void calcApproxPos(); //calcs center based on min. bounding box
-	glm::vec3 getApproxPos();
 
-	void translate(glm::vec3 &translation);
-	void scale(glm::vec3 &scale);
-	void rotate(GLfloat &degrees, glm::vec3 &axis);
+	void setApproxPos();
+	glm::vec3 getApproxPos();
+	void resetApproxPos();
+
+	void translate(const glm::vec3 &translation);
+	void scale(const glm::vec3 &scale);
+	void rotate(const GLfloat &degrees, const glm::vec3 &axis);
 
 	void sendUniforms(Shader &shader);
+	void resetModel();
 
 protected:
 	void loadModel(std::string path);

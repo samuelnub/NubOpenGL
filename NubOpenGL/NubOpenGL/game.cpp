@@ -9,12 +9,7 @@
 #include "game.h"
 #include "globals.h"
 #include "model.h"
-#include "shader.h"
 #include <iostream>
-
-//temp includes for basic const char*-based glsl shaders, and the vertices of a triangle more basic than my mother
-#include "shadersTest.h"
-#include "verticesTest.h"
 
 Game::Game(GLFWwindow *windu)
 {
@@ -23,10 +18,20 @@ Game::Game(GLFWwindow *windu)
 	G::player.spawn(glm::vec3((gamesettings::SPAWNX),(gamesettings::SPAWNY),(gamesettings::SPAWNZ)));
 
 
-	Shader shades("shaders/simpleVert.glsl", "shaders/simpleFrag.glsl");
+	Shader shades("shaders/colorsVert.glsl", "shaders/colorsFrag.glsl");
+	Shader lampo("shaders/lampVert.glsl", "shaders/lampFrag.glsl");
 
 	Model nanoguy("models/nanosuit/nanosuit.obj");
-	Model cuban("models/cube/cube.obj");
+	Model cuban("models/sphere/sphere.obj");
+
+	nanoguy._uniformFloat["material.shininess"] = 64.0f;
+	nanoguy._uniformVec3["light.ambient"] = glm::vec3(0.1f, 0.1f, 0.1f);
+	nanoguy._uniformVec3["light.diffuse"] = glm::vec3(1.0f, 1.0f, 1.0f);
+	nanoguy._uniformVec3["light.specular"] = glm::vec3(1.0f, 1.0f, 1.0f);
+	nanoguy._uniformFloat["light.constant"] = 0.5f;
+	nanoguy._uniformFloat["light.linear"] = 0.001f;
+	nanoguy._uniformFloat["light.quadratic"] = 0.0002f;
+
 
 	while (!glfwWindowShouldClose(windu))
 	{
@@ -37,26 +42,40 @@ Game::Game(GLFWwindow *windu)
 
 		glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		
+		G::player.setMatrices(shades);
+
+		//set lamp shader first you dumbo
+		lampo.use();
+
+		cuban.translate(glm::vec3(0.0f, 5.0f, 0.0f));
+		cuban.rotate((GLfloat)glfwGetTime()*50.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+		cuban.translate(glm::vec3(5.0f, 0.0f, 0.0f));
+
+		G::player.sendMatrices(lampo);
+
+		cuban.draw(lampo);
 
 		//use shades shaders
 		shades.use();
 
-		G::player.setMatrices();
+		cuban.setApproxPos();
 
-		glUniformMatrix4fv(glGetUniformLocation(shades._program, "view"), 1, GL_FALSE, glm::value_ptr(G::player.getView()));
-		glUniformMatrix4fv(glGetUniformLocation(shades._program, "projection"), 1, GL_FALSE, glm::value_ptr(G::player.getProj()));
+		glUniform3f(glGetUniformLocation(shades._program, "viewPos"), G::player.getPos().x, G::player.getPos().y, G::player.getPos().z);
+		nanoguy._uniformVec3["light.position"] = glm::vec3(cuban.getApproxPos().x, cuban.getApproxPos().y, cuban.getApproxPos().z);
 
-		glm::mat4 model;
-		model = glm::rotate(model, glm::radians((GLfloat)glfwGetTime() * 30.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-		model = glm::translate(model, glm::vec3(0.0f, -1.75f, 0.0f));
-		model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
-		glUniformMatrix4fv(glGetUniformLocation(shades._program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+		nanoguy.scale(glm::vec3(0.3, 0.3, 0.3));
+		nanoguy.rotate((GLfloat)glfwGetTime()*-20.0f, glm::vec3(0.0f, 1.0f, 0.0f));
 
+		nanoguy.sendUniforms(shades);
 
-
-		cuban.draw(shades);
 		nanoguy.draw(shades);
 
+		G::player.sendMatrices(shades);
+
+		nanoguy.resetModel();
+		cuban.resetModel();
+		cuban.resetApproxPos();
 		G::player.resetView();
 		G::player.resetProj();
 

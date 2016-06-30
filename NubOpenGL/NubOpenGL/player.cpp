@@ -23,11 +23,15 @@ void Player::spawn(glm::vec3 position, glm::vec3 up, GLfloat yaw, GLfloat pitch)
 	this->updateVectors();
 }
 
-void Player::setMatrices()
+void Player::setMatrices(Shader &shader)
 {
 	this->_view = glm::lookAt(this->_pos, this->_pos + this->_front, this->_up);
 
 	this->_projection = glm::perspective(this->_zoom, (GLfloat)windowsettings::width / (GLfloat)windowsettings::height, 0.1f, 1000.0f);
+
+	//assume your shader names it "view" and "projection" too
+	glUniformMatrix4fv(glGetUniformLocation(shader._program, "view"), 1, GL_FALSE, glm::value_ptr(this->_view));
+	glUniformMatrix4fv(glGetUniformLocation(shader._program, "projection"), 1, GL_FALSE, glm::value_ptr(this->_projection));
 }
 
 glm::vec3 Player::getPos()
@@ -100,6 +104,14 @@ void Player::processMouseScroll(GLfloat yoffset)
 		this->_zoom = 1.0f;
 	if (this->_zoom >= gamesettings::ZOOM)
 		this->_zoom = gamesettings::ZOOM;
+}
+
+void Player::sendMatrices(Shader & shader)
+{
+	//although setmatrices sends them, if you use multiple shaders, you gotta do this
+
+	glUniformMatrix4fv(glGetUniformLocation(shader._program, "view"), 1, GL_FALSE, glm::value_ptr(this->_view));
+	glUniformMatrix4fv(glGetUniformLocation(shader._program, "projection"), 1, GL_FALSE, glm::value_ptr(this->_projection));
 }
 
 void Player::updateVectors()

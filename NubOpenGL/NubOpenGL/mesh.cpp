@@ -32,7 +32,7 @@ void Mesh::draw(Shader & shader)
 			ss << specularN++;
 		number = ss.str();
 		
-		glUniform1f(glGetUniformLocation(shader._program, (name + number).c_str()), i);
+		glUniform1f(glGetUniformLocation(shader._program, ("material." + name + number).c_str()), i);
 		glBindTexture(GL_TEXTURE_2D, this->_textures[i].id);
 	}
 

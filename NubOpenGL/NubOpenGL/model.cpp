@@ -16,8 +16,6 @@ void Model::draw(Shader &shader)
 	{
 		this->_meshes[i].draw(shader);
 	}
-
-	this->_modelMat = glm::mat4();
 }
 
 void Model::loadModel(std::string path)
@@ -218,22 +216,34 @@ void Model::calcApproxPos()
 	this->_approxPos.z = maxZ - minZ;
 }
 
+void Model::setApproxPos()
+{
+	glm::vec4 tempPos = this->_modelMat * glm::vec4((this->_approxPos), (1.0f));
+
+	this->_approxPos = glm::vec3((tempPos.x), (tempPos.y), (tempPos.z));
+}
+
 glm::vec3 Model::getApproxPos()
 {
 	return this->_approxPos;
 }
 
-void Model::translate(glm::vec3 & translation)
+void Model::resetApproxPos()
+{
+	this->_approxPos = glm::vec3();
+}
+
+void Model::translate(const glm::vec3 & translation)
 {
 	this->_modelMat = glm::translate(this->_modelMat, translation);
 }
 
-void Model::scale(glm::vec3 & scale)
+void Model::scale(const glm::vec3 & scale)
 {
 	this->_modelMat = glm::scale(this->_modelMat, scale);
 }
 
-void Model::rotate(GLfloat & degrees, glm::vec3 & axis)
+void Model::rotate(const GLfloat & degrees, const glm::vec3 & axis)
 {
 	this->_modelMat = glm::rotate(this->_modelMat, glm::radians(degrees), axis);
 }
@@ -248,6 +258,8 @@ void Model::sendUniforms(Shader &shader)
 		while (iter != _uniformVec3.end())
 		{
 			glUniform3f(glGetUniformLocation(shader._program, iter->first), iter->second.x, iter->second.y, iter->second.z);
+			std::cout << "sent " << iter->second.x << " to " << iter->first << "\n";
+			iter++;
 		}
 	}
 
@@ -259,6 +271,7 @@ void Model::sendUniforms(Shader &shader)
 		while (iter != _uniformMat4.end())
 		{
 			glUniformMatrix4fv(glGetUniformLocation(shader._program, iter->first), 1, GL_FALSE, glm::value_ptr(iter->second));
+			iter++;
 		}
 	}
 
@@ -270,6 +283,12 @@ void Model::sendUniforms(Shader &shader)
 		while (iter != _uniformFloat.end())
 		{
 			glUniform1f(glGetUniformLocation(shader._program, iter->first), iter->second);
+			iter++;
 		}
 	}
+}
+
+void Model::resetModel()
+{
+	this->_modelMat = glm::mat4();
 }

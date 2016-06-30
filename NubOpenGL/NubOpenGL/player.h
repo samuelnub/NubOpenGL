@@ -10,6 +10,7 @@
 #include <GL/glew.h>
 #endif
 
+#include "shader.h"
 #include "globals.h"
 #include <vector>
 
@@ -42,7 +43,7 @@ public:
 
 	void spawn(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), GLfloat yaw = gamesettings::YAW, GLfloat pitch = gamesettings::PITCH);
 
-	void setMatrices();
+	void setMatrices(Shader &shader);
 
 	glm::vec3 getPos();
 	glm::mat4 getView();
@@ -54,6 +55,8 @@ public:
 	void processKeyboard(const std::vector<bool> &keys, GLfloat &deltaTime);
 	void processMouseMove(GLfloat xoffset, GLfloat yoffset, GLboolean constrainPitch = true);
 	void processMouseScroll(GLfloat yoffset);
+
+	void sendMatrices(Shader &shader);
 
 protected:
 	void updateVectors();

@@ -2,8 +2,8 @@
 //
 
 #include <iostream>
-#include "graphics.h"
-#include "globals.h"
+#include <graphics.h>
+#include <globals.h>
 
 int main()
 {

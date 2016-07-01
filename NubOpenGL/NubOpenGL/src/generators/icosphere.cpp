@@ -2,7 +2,7 @@
 #include <math.h>
 
 //courtesy of http://blog.andreaskahler.com/2009/06/creating-icosphere-mesh-in-code.html
-
+//don't go above 7 subdivisions lol
 Icosphere::Icosphere(GLuint subdivides)
 {
 	this->create(subdivides);

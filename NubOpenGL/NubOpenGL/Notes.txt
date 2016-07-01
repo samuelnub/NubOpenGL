@@ -55,6 +55,13 @@
 	removed redundant test vertices, test shaders, render.h and cpp
 	using old simpleVert and simpleFrag shaders for now, updated to suit simple needs, will shift back to proper lighting shaders eventually i think...
 
+30 June 2016
+	added a lil bit of functions in model, hopefully stuff that can be easily extended on
+	rearranged the place, should be easier to manage
+
+1 July 2016
+	implemented icosphere generation based on http://blog.andreaskahler.com/2009/06/creating-icosphere-mesh-in-code.html, really flippin useful
+
 TODO:
 	implement proper input class instead of being a procrastinating dumbo and having it clogging the main game cpp
 	normal maps instead of per-face normals
@@ -62,3 +69,8 @@ TODO:
 	clean up the process of passing uniform vars around
 	shadow casting
 	mesh.h should have some of the funcs render.h had, getting centre pos etc.
+	eventual overhaul: rendering shouldnt be handled per object, but done once in the main loop, rendering the number of models necessary
+	instancing
+	deferred rendering
+	buffers n stuff
+	the basics of some form of "game logic" aka a crapton of bools

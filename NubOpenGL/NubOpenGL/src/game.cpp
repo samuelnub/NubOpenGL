@@ -6,9 +6,10 @@
 #include <GL/glew.h>
 #endif
 
-#include "game.h"
-#include "globals.h"
-#include "model.h"
+#include <game.h>
+#include <globals.h>
+#include <model.h>
+#include <generators\icosphere.h>
 #include <iostream>
 
 Game::Game(GLFWwindow *windu)
@@ -32,6 +33,11 @@ Game::Game(GLFWwindow *windu)
 	nanoguy._uniformFloat["light.linear"] = 0.001f;
 	nanoguy._uniformFloat["light.quadratic"] = 0.0002f;
 
+	Texture tempTexture;
+	std::vector<Texture> tempTexVec;
+	tempTexVec.push_back(tempTexture);
+	Icosphere testBall(4);
+	Mesh icoTest(testBall.getVerts(), testBall.getIndices(), tempTexVec);
 
 	while (!glfwWindowShouldClose(windu))
 	{
@@ -40,7 +46,7 @@ Game::Game(GLFWwindow *windu)
 		glfwPollEvents();
 		G::player.processKeyboard(Input::_keys, Input::_deltaTime);
 
-		glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
+		glClearColor(0.6f, 0.7f, 0.9f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
 		G::player.setMatrices(shades);
@@ -69,6 +75,7 @@ Game::Game(GLFWwindow *windu)
 
 		nanoguy.sendUniforms(shades);
 
+		icoTest.draw(shades);
 		nanoguy.draw(shades);
 
 		G::player.sendMatrices(shades);

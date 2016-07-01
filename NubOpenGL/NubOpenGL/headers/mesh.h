@@ -12,7 +12,7 @@
 
 #include <GLFW\glfw3.h>
 
-#include "shader.h"
+#include <shader.h>
 #include <iostream>
 #include <string>
 #include <vector>

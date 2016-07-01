@@ -10,8 +10,8 @@
 #include <GL/glew.h>
 #endif
 
-#include "shader.h"
-#include "globals.h"
+#include <shader.h>
+#include <globals.h>
 #include <vector>
 
 #include <glm\glm.hpp>

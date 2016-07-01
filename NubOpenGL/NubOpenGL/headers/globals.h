@@ -14,6 +14,7 @@ enum Errors
 
 namespace gamesettings
 {
+
 	//initial player spawn coords
 	const GLfloat SPAWNX = 0.0f;
 	const GLfloat SPAWNY = 0.0f;

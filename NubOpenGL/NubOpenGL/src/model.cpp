@@ -1,5 +1,5 @@
-#include "model.h"
-#include "globals.h"
+#include <model.h>
+#include <globals.h>
 
 #include <SOIL\SOIL.h>
 

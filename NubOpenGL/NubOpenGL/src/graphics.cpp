@@ -1,5 +1,5 @@
-#include "graphics.h"
-#include "globals.h"
+#include <graphics.h>
+#include <globals.h>
 #include <iostream>
 
 
@@ -40,6 +40,7 @@ Graphics::Graphics()
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
 	glEnable(GL_CULL_FACE);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	//glEnable(GL_STENCIL_TEST);
 	//glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
 	//glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);

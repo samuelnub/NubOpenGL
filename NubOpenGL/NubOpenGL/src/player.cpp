@@ -27,7 +27,7 @@ void Player::setMatrices(Shader &shader)
 {
 	this->_view = glm::lookAt(this->_pos, this->_pos + this->_front, this->_up);
 
-	this->_projection = glm::perspective(this->_zoom, (GLfloat)windowsettings::width / (GLfloat)windowsettings::height, 0.1f, 1000.0f);
+	this->_projection = glm::perspective(this->_zoom, (GLfloat)windowsettings::width / (GLfloat)windowsettings::height, 0.01f, 10000.0f);
 
 	//assume your shader names it "view" and "projection" too
 	glUniformMatrix4fv(glGetUniformLocation(shader._program, "view"), 1, GL_FALSE, glm::value_ptr(this->_view));
@@ -73,6 +73,13 @@ void Player::processKeyboard(const std::vector<bool> &keys, GLfloat &deltaTime)
 
 	if (keys.at(gamesettings::controls::HOME))
 		this->_pos = glm::vec3((gamesettings::SPAWNX), (gamesettings::SPAWNY), (gamesettings::SPAWNZ));
+
+	if (keys.at(gamesettings::controls::SPEEDUP))
+		this->_moveSpeed += 0.5f;
+	if (keys.at(gamesettings::controls::SPEEDDOWN))
+		this->_moveSpeed -= 0.5f;
+	if (keys.at(gamesettings::controls::SPEEDRESET))
+		this->_moveSpeed = gamesettings::SPEED;
 }
 
 void Player::processMouseMove(GLfloat xoffset, GLfloat yoffset, GLboolean constrainPitch)

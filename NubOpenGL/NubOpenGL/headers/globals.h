@@ -12,6 +12,15 @@ enum Errors
 	SUPER_BAD_ERROR
 };
 
+namespace state
+{
+	//how everything initially starts, and you change them as the program runs, just to remind your dumb little brain
+	GLboolean MAINMENU = true;
+	GLboolean INGAME = false;
+	GLboolean PAUSEMENU = false;
+
+};
+
 namespace gamesettings
 {
 
@@ -35,6 +44,9 @@ namespace gamesettings
 		const GLint RIGHT = GLFW_KEY_D;
 
 		const GLint HOME = GLFW_KEY_H;
+		const GLint SPEEDUP = GLFW_KEY_R;
+		const GLint SPEEDDOWN = GLFW_KEY_F;
+		const GLint SPEEDRESET = GLFW_KEY_C;
 	}
 }
 

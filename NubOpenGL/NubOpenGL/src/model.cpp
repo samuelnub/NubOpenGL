@@ -288,6 +288,11 @@ void Model::sendUniforms(Shader &shader)
 	}
 }
 
+void Model::sendModel(Shader &shader)
+{
+	glUniformMatrix4fv(glGetUniformLocation(shader._program, "model"), 1, GL_FALSE, glm::value_ptr(this->_modelMat));
+}
+
 void Model::resetModel()
 {
 	this->_modelMat = glm::mat4();

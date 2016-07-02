@@ -42,6 +42,7 @@ public:
 	void rotate(const GLfloat &degrees, const glm::vec3 &axis);
 
 	void sendUniforms(Shader &shader);
+	void sendModel(Shader &shader);
 	void resetModel();
 
 protected:
